@@ -9,6 +9,10 @@ import { Content } from './pages/Content';
 import { Quiz } from './pages/Quiz';
 import { Analytics } from './pages/Analytics';
 import { ChatBot } from './pages/ChatBot';
+import { LearningPath } from './pages/LearningPath';
+import { Compare } from './pages/Compare';
+import { Flashcards } from './pages/Flashcards';
+import { Pomodoro } from './pages/Pomodoro';
 import client from './api/client';
 
 const ProtectedRoute = ({ children }) => {
@@ -53,10 +57,34 @@ const Layout = ({ children }) => {
             📚 Content
           </button>
           <button
+            onClick={() => navigate('/flashcards')}
+            className="w-full text-left px-4 py-3 rounded-lg hover:bg-gradient-to-r hover:from-primary hover:to-blue-600 hover:text-white transition-all duration-200 font-medium text-gray-700 hover:shadow-md"
+          >
+            🎴 Flashcards
+          </button>
+          <button
+            onClick={() => navigate('/pomodoro')}
+            className="w-full text-left px-4 py-3 rounded-lg hover:bg-gradient-to-r hover:from-primary hover:to-blue-600 hover:text-white transition-all duration-200 font-medium text-gray-700 hover:shadow-md"
+          >
+            ⏱️ Pomodoro
+          </button>
+          <button
+            onClick={() => navigate('/learning-path')}
+            className="w-full text-left px-4 py-3 rounded-lg hover:bg-gradient-to-r hover:from-primary hover:to-blue-600 hover:text-white transition-all duration-200 font-medium text-gray-700 hover:shadow-md"
+          >
+            🗺️ Learning Path
+          </button>
+          <button
             onClick={() => navigate('/analytics')}
             className="w-full text-left px-4 py-3 rounded-lg hover:bg-gradient-to-r hover:from-primary hover:to-blue-600 hover:text-white transition-all duration-200 font-medium text-gray-700 hover:shadow-md"
           >
             📈 Analytics
+          </button>
+          <button
+            onClick={() => navigate('/compare')}
+            className="w-full text-left px-4 py-3 rounded-lg hover:bg-gradient-to-r hover:from-primary hover:to-blue-600 hover:text-white transition-all duration-200 font-medium text-gray-700 hover:shadow-md"
+          >
+            👥 Compare
           </button>
           <button
             onClick={() => navigate('/chatbot')}
@@ -154,6 +182,46 @@ function App() {
             <ProtectedRoute>
               <Layout>
                 <Analytics />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/learning-path"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <LearningPath />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/compare"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Compare />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/flashcards"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Flashcards />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/pomodoro"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Pomodoro />
               </Layout>
             </ProtectedRoute>
           }

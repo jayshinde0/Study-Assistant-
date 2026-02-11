@@ -22,6 +22,8 @@ export const Content = () => {
   const [filterTab, setFilterTab] = useState('all');
   const [showSummary, setShowSummary] = useState(false);
   const [selectedContent, setSelectedContent] = useState(null);
+  const [generatingSummary, setGeneratingSummary] = useState(false);
+  const [summaryLevel, setSummaryLevel] = useState('brief');
 
   useEffect(() => {
     fetchContents();
@@ -117,6 +119,24 @@ export const Content = () => {
   const handleGenerateQuiz = (content) => {
     setSelectedContent(content);
     setShowSummary(true);
+    setSummaryLevel('brief');
+  };
+
+  const handleGenerateSummary = async () => {
+    if (!selectedContent) return;
+    
+    setGeneratingSummary(true);
+    try {
+      const res = await client.post(`/content/${selectedContent._id}/summarize`);
+      setSelectedContent(res.data.data);
+      // Update in the list too
+      setContents(contents.map(c => c._id === res.data.data._id ? res.data.data : c));
+    } catch (error) {
+      console.error('Summary generation failed:', error);
+      alert('Failed to generate summary: ' + (error.response?.data?.error?.message || error.message));
+    } finally {
+      setGeneratingSummary(false);
+    }
   };
 
   const handleStartQuiz = async () => {
@@ -150,14 +170,14 @@ export const Content = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
         >
-          <Card className="max-w-3xl w-full max-h-[80vh] overflow-y-auto">
+          <Card className="max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             {/* Header */}
             <div className="mb-6 pb-4 border-b">
               <div className="flex items-center gap-3 mb-3">
                 {selectedContent.type === 'pdf' && <span className="text-3xl">📄</span>}
                 {selectedContent.type === 'youtube' && <span className="text-3xl">🎥</span>}
                 {selectedContent.type === 'text' && <span className="text-3xl">📝</span>}
-                <div>
+                <div className="flex-1">
                   <h3 className="text-2xl font-bold">{selectedContent.title}</h3>
                   <p className="text-sm text-gray-500 mt-1">
                     Type: <span className="font-semibold capitalize">{selectedContent.type}</span>
@@ -182,10 +202,76 @@ export const Content = () => {
               </div>
             </div>
 
+            {/* Summary Section */}
+            <div className="mb-6">
+              <div className="flex items-center justify-between mb-4">
+                <h4 className="font-bold text-lg">📝 AI-Generated Summary</h4>
+                {!selectedContent.summaries?.brief && (
+                  <Button
+                    onClick={handleGenerateSummary}
+                    loading={generatingSummary}
+                    size="sm"
+                  >
+                    {generatingSummary ? 'Generating...' : '✨ Generate Summary'}
+                  </Button>
+                )}
+              </div>
+
+              {selectedContent.summaries?.brief ? (
+                <div>
+                  {/* Summary Level Tabs */}
+                  <div className="flex gap-2 mb-4 border-b">
+                    <button
+                      onClick={() => setSummaryLevel('brief')}
+                      className={`px-4 py-2 font-medium border-b-2 transition-colors text-sm ${
+                        summaryLevel === 'brief'
+                          ? 'border-primary text-primary'
+                          : 'border-transparent text-gray-600 hover:text-gray-900'
+                      }`}
+                    >
+                      Quick (2-3 sentences)
+                    </button>
+                    <button
+                      onClick={() => setSummaryLevel('detailed')}
+                      className={`px-4 py-2 font-medium border-b-2 transition-colors text-sm ${
+                        summaryLevel === 'detailed'
+                          ? 'border-primary text-primary'
+                          : 'border-transparent text-gray-600 hover:text-gray-900'
+                      }`}
+                    >
+                      Detailed (5-7 sentences)
+                    </button>
+                    <button
+                      onClick={() => setSummaryLevel('comprehensive')}
+                      className={`px-4 py-2 font-medium border-b-2 transition-colors text-sm ${
+                        summaryLevel === 'comprehensive'
+                          ? 'border-primary text-primary'
+                          : 'border-transparent text-gray-600 hover:text-gray-900'
+                      }`}
+                    >
+                      Comprehensive
+                    </button>
+                  </div>
+
+                  {/* Summary Content */}
+                  <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-5 border-2 border-blue-200">
+                    <p className="text-gray-800 leading-relaxed whitespace-pre-wrap">
+                      {selectedContent.summaries[summaryLevel] || 'Summary not available for this level.'}
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <div className="bg-gray-50 rounded-lg p-6 text-center border-2 border-dashed border-gray-300">
+                  <p className="text-gray-600 mb-3">No summary generated yet</p>
+                  <p className="text-sm text-gray-500">Click "Generate Summary" to create AI-powered summaries at different detail levels</p>
+                </div>
+              )}
+            </div>
+
             {/* Content Preview */}
             <div className="mb-6">
-              <h4 className="font-bold text-lg mb-3">📖 Content Preview:</h4>
-              <div className="bg-gray-50 rounded-lg p-4 max-h-48 overflow-y-auto">
+              <h4 className="font-bold text-lg mb-3">📖 Original Content Preview:</h4>
+              <div className="bg-gray-50 rounded-lg p-4 max-h-48 overflow-y-auto border">
                 <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-wrap">
                   {selectedContent.originalText?.substring(0, 800)}
                   {selectedContent.originalText && selectedContent.originalText.length > 800 && '...'}
@@ -203,15 +289,15 @@ export const Content = () => {
               </div>
               <div className="bg-green-50 rounded-lg p-3 text-center">
                 <p className="text-2xl font-bold text-green-600">
-                  {Math.ceil((selectedContent.originalText?.length || 0) / 100)}
+                  {Math.ceil((selectedContent.originalText?.length || 0) / 500)}
                 </p>
-                <p className="text-xs text-gray-600">Sections</p>
+                <p className="text-xs text-gray-600">Paragraphs</p>
               </div>
               <div className="bg-purple-50 rounded-lg p-3 text-center">
                 <p className="text-2xl font-bold text-purple-600">
-                  {selectedContent.type === 'youtube' ? '🎥' : selectedContent.type === 'pdf' ? '📄' : '📝'}
+                  {selectedContent.summaries?.brief ? '✅' : '⏳'}
                 </p>
-                <p className="text-xs text-gray-600">Type</p>
+                <p className="text-xs text-gray-600">Summary</p>
               </div>
             </div>
 
@@ -222,7 +308,7 @@ export const Content = () => {
                 onClick={() => setShowSummary(false)}
                 className="flex-1"
               >
-                Cancel
+                Close
               </Button>
               <Button
                 onClick={handleStartQuiz}
@@ -526,14 +612,29 @@ export const Content = () => {
                   <p className="text-gray-600 text-sm mb-5 line-clamp-2 min-h-10">
                     {content.topics?.join(', ') || 'Processing...'}
                   </p>
-                  <Button 
-                    variant="secondary" 
-                    className="w-full"
-                    onClick={() => handleGenerateQuiz(content)}
-                    disabled={generatingQuizId !== null}
-                  >
-                    {generatingQuizId === content._id ? '⏳ Generating...' : '✨ Generate Quiz'}
-                  </Button>
+                  <div className="flex gap-2">
+                    {content.summaries?.brief && (
+                      <Button 
+                        variant="secondary" 
+                        className="flex-1"
+                        onClick={() => {
+                          setSelectedContent(content);
+                          setShowSummary(true);
+                          setSummaryLevel('brief');
+                        }}
+                      >
+                        📝 View Summary
+                      </Button>
+                    )}
+                    <Button 
+                      variant={content.summaries?.brief ? "primary" : "secondary"}
+                      className="flex-1"
+                      onClick={() => handleGenerateQuiz(content)}
+                      disabled={generatingQuizId !== null}
+                    >
+                      {generatingQuizId === content._id ? '⏳ Generating...' : '✨ Generate Quiz'}
+                    </Button>
+                  </div>
                 </Card>
               </motion.div>
             ))}

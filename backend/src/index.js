@@ -8,6 +8,10 @@ import quizRoutes from './routes/quiz.js';
 import analyticsRoutes from './routes/analytics.js';
 import resourceRoutes from './routes/resources.js';
 import chatbotRoutes from './routes/chatbot.js';
+import learningPathRoutes from './routes/learningPath.js';
+import comparisonRoutes from './routes/comparison.js';
+import flashcardRoutes from './routes/flashcard.js';
+import studySessionRoutes from './routes/studySession.js';
 import { errorHandler } from './middleware/errorHandler.js';
 
 dotenv.config();
@@ -31,6 +35,10 @@ app.use('/api/quiz', quizRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/resources', resourceRoutes);
 app.use('/api/chatbot', chatbotRoutes);
+app.use('/api/learning-path', learningPathRoutes);
+app.use('/api/comparison', comparisonRoutes);
+app.use('/api/flashcards', flashcardRoutes);
+app.use('/api/study-sessions', studySessionRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

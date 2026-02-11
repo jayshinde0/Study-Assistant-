@@ -1,7 +1,12 @@
 import axios from 'axios';
+// import { GoogleGenerativeAI } from '@google/generative-ai';
 
 // Ollama API endpoint (runs locally)
 const OLLAMA_API = 'http://localhost:11434/api/generate';
+
+// Initialize Gemini API (commented out - using Ollama instead)
+// const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+// const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
 
 export class GeminiService {
   async generateSummary(text, type = 'brief') {
@@ -13,9 +18,12 @@ export class GeminiService {
       };
 
       const response = await axios.post(OLLAMA_API, {
-        model: 'mistral',
+        model: 'mistral',  // Smaller, faster model (2.2GB vs 4.4GB)
+        // model: 'phi3',  // Smaller, faster model (2.2GB vs 4.4GB)
         prompt: prompts[type],
         stream: false
+      }, {
+        timeout: 30000  // 30 second timeout
       });
 
       return response.data.response;
