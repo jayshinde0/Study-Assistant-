@@ -1,0 +1,65 @@
+DATA STRUCTURES AND ALGORITHMS
+
+1. ARRAYS
+Arrays are collections of elements stored in contiguous memory locations. They provide O(1) access time but O(n) insertion/deletion time. Multi-dimensional arrays extend this concept.
+
+2. LINKED LISTS
+Linked lists consist of nodes connected by pointers. Types include:
+- Singly Linked List: Each node points to next
+- Doubly Linked List: Each node points to next and previous
+- Circular Linked List: Last node points to first
+Operations: Insert O(1), Delete O(1), Search O(n)
+
+3. STACKS
+LIFO (Last In First Out) data structure. Operations:
+- Push: Add element O(1)
+- Pop: Remove element O(1)
+- Peek: View top element O(1)
+Applications: Expression evaluation, backtracking, function calls
+
+4. QUEUES
+FIFO (First In First Out) data structure. Types:
+- Simple Queue: Standard FIFO
+- Circular Queue: Efficient space usage
+- Priority Queue: Elements have priorities
+- Deque: Double-ended queue
+
+5. TREES
+Hierarchical data structure with root and child nodes. Types:
+- Binary Tree: Each node has at most 2 children
+- Binary Search Tree: Left < Parent < Right
+- AVL Tree: Self-balancing BST
+- Red-Black Tree: Balanced with color properties
+Traversals: Inorder, Preorder, Postorder, Level-order
+
+6. GRAPHS
+Collection of vertices connected by edges. Types:
+- Directed Graph: Edges have direction
+- Undirected Graph: Edges have no direction
+- Weighted Graph: Edges have weights
+Algorithms: BFS, DFS, Dijkstra, Floyd-Warshall
+
+7. SORTING ALGORITHMS
+- Bubble Sort: O(n²) - Simple but slow
+- Selection Sort: O(n²) - Finds minimum
+- Insertion Sort: O(n²) - Builds sorted array
+- Merge Sort: O(n log n) - Divide and conquer
+- Quick Sort: O(n log n) average - Partition-based
+- Heap Sort: O(n log n) - Uses heap structure
+
+8. SEARCHING ALGORITHMS
+- Linear Search: O(n) - Checks each element
+- Binary Search: O(log n) - Requires sorted array
+- Hash Table Search: O(1) average - Uses hashing
+
+9. DYNAMIC PROGRAMMING
+Solves problems by breaking into subproblems and storing results. Examples:
+- Fibonacci: Overlapping subproblems
+- Knapsack: Optimal substructure
+- Longest Common Subsequence: String matching
+
+10. GREEDY ALGORITHMS
+Makes locally optimal choices hoping for global optimum. Examples:
+- Activity Selection: Maximum non-overlapping activities
+- Huffman Coding: Optimal prefix codes
+- Dijkstra's Algorithm: Shortest path

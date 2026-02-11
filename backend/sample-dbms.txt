@@ -1,0 +1,45 @@
+DATABASE MANAGEMENT SYSTEMS
+
+1. INTRODUCTION TO DBMS
+A Database Management System (DBMS) is software that manages databases. It provides an interface for users and applications to create, read, update, and delete data. Key features include data security, concurrent access, and data integrity.
+
+2. RELATIONAL DATABASE MODEL
+The relational model organizes data into tables (relations) with rows (tuples) and columns (attributes). Each table has a primary key that uniquely identifies each row. Foreign keys establish relationships between tables.
+
+3. SQL (STRUCTURED QUERY LANGUAGE)
+SQL is used to query and manipulate data in relational databases. Main commands include:
+- SELECT: Retrieve data
+- INSERT: Add new data
+- UPDATE: Modify existing data
+- DELETE: Remove data
+- CREATE: Create tables
+- ALTER: Modify table structure
+
+4. NORMALIZATION
+Normalization is the process of organizing data to reduce redundancy. Normal forms include:
+- 1NF (First Normal Form): Eliminate repeating groups
+- 2NF (Second Normal Form): Remove partial dependencies
+- 3NF (Third Normal Form): Remove transitive dependencies
+- BCNF (Boyce-Codd Normal Form): Stricter than 3NF
+
+5. INDEXING
+Indexes improve query performance by creating a sorted structure for quick data retrieval. Types include:
+- Primary Index: On primary key
+- Secondary Index: On non-key attributes
+- Composite Index: On multiple columns
+
+6. TRANSACTIONS
+A transaction is a sequence of operations that must all succeed or all fail. ACID properties ensure data consistency:
+- Atomicity: All or nothing
+- Consistency: Valid state to valid state
+- Isolation: No interference between transactions
+- Durability: Permanent once committed
+
+7. CONCURRENCY CONTROL
+Manages simultaneous access to data. Techniques include:
+- Locking: Prevents conflicts
+- Timestamps: Orders transactions
+- Optimistic Concurrency: Assumes conflicts are rare
+
+8. QUERY OPTIMIZATION
+Improves query execution efficiency through query parsing, optimization, compilation, and execution.

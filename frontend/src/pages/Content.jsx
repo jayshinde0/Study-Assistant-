@@ -13,6 +13,7 @@ export const Content = () => {
   const [text, setText] = useState('');
   const [pdfUrl, setPdfUrl] = useState('');
   const [youtubeUrl, setYoutubeUrl] = useState('');
+  const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [contents, setContents] = useState([]);
   const [fetchLoading, setFetchLoading] = useState(true);
@@ -68,6 +69,34 @@ export const Content = () => {
         }
         uploadData.youtubeUrl = youtubeUrl;
         uploadData.type = 'youtube';
+      } else if (activeTab === 'file') {
+        if (!file) {
+          alert('Please select a file');
+          setLoading(false);
+          return;
+        }
+        if (!title.trim()) {
+          alert('Please enter a title');
+          setLoading(false);
+          return;
+        }
+
+        // Upload file using FormData
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('title', title);
+
+        const res = await client.post('/content/upload-file', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+        setContents([res.data.data, ...contents]);
+        setTitle('');
+        setFile(null);
+        alert('File uploaded successfully!');
+        setLoading(false);
+        return;
       }
 
       const res = await client.post('/content/upload', uploadData);
@@ -234,25 +263,39 @@ export const Content = () => {
       )}
 
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-        <h1 className="text-3xl font-bold mb-6">📚 Smart Library</h1>
-        <p className="text-gray-600 mb-6">Upload and manage your study materials</p>
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-2">
+            📚 Smart Library
+          </h1>
+          <p className="text-gray-600">Upload and manage your study materials</p>
+        </div>
 
-        <Card>
+        <Card className="bg-gradient-to-br from-white to-gray-50">
           {/* Tabs */}
-          <div className="flex gap-2 mb-6 border-b">
+          <div className="flex gap-2 mb-8 border-b overflow-x-auto">
             <button
               onClick={() => setActiveTab('text')}
-              className={`px-4 py-3 font-medium border-b-2 transition-colors ${
+              className={`px-4 py-3 font-medium border-b-2 transition-all whitespace-nowrap ${
                 activeTab === 'text'
                   ? 'border-primary text-primary'
                   : 'border-transparent text-gray-600 hover:text-gray-900'
               }`}
             >
-              📝 Text Upload
+              📝 Text
+            </button>
+            <button
+              onClick={() => setActiveTab('file')}
+              className={`px-4 py-3 font-medium border-b-2 transition-all whitespace-nowrap ${
+                activeTab === 'file'
+                  ? 'border-primary text-primary'
+                  : 'border-transparent text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              📁 File
             </button>
             <button
               onClick={() => setActiveTab('pdf')}
-              className={`px-4 py-3 font-medium border-b-2 transition-colors ${
+              className={`px-4 py-3 font-medium border-b-2 transition-all whitespace-nowrap ${
                 activeTab === 'pdf'
                   ? 'border-primary text-primary'
                   : 'border-transparent text-gray-600 hover:text-gray-900'
@@ -262,17 +305,17 @@ export const Content = () => {
             </button>
             <button
               onClick={() => setActiveTab('youtube')}
-              className={`px-4 py-3 font-medium border-b-2 transition-colors ${
+              className={`px-4 py-3 font-medium border-b-2 transition-all whitespace-nowrap ${
                 activeTab === 'youtube'
                   ? 'border-primary text-primary'
                   : 'border-transparent text-gray-600 hover:text-gray-900'
               }`}
             >
-              🎥 YouTube URL
+              🎥 YouTube
             </button>
           </div>
 
-          <form onSubmit={handleUpload} className="space-y-4">
+          <form onSubmit={handleUpload} className="space-y-6">
             <Input
               label="Title"
               placeholder="e.g., Biology Chapter 5"
@@ -283,69 +326,131 @@ export const Content = () => {
 
             {/* Text Tab */}
             {activeTab === 'text' && (
-              <div>
-                <label className="block text-sm font-medium mb-2">Content</label>
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                <label className="block text-sm font-bold mb-3 text-gray-700">Content</label>
                 <textarea
-                  className="input-field min-h-48"
+                  className="w-full p-4 border-2 border-gray-200 rounded-lg focus:border-primary focus:outline-none transition-colors min-h-48 resize-none"
                   placeholder="Paste your study material here..."
                   value={text}
                   onChange={(e) => setText(e.target.value)}
                   required
                 />
-              </div>
+              </motion.div>
+            )}
+
+            {/* File Upload Tab */}
+            {activeTab === 'file' && (
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                <label className="block text-sm font-bold mb-3 text-gray-700">Upload File</label>
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-primary hover:bg-primary hover:bg-opacity-5 transition-all cursor-pointer">
+                  <input
+                    type="file"
+                    accept=".pdf,.docx,.doc,.txt"
+                    onChange={(e) => setFile(e.target.files?.[0] || null)}
+                    className="hidden"
+                    id="file-input"
+                    required
+                  />
+                  <label htmlFor="file-input" className="cursor-pointer block">
+                    <motion.div
+                      className="text-5xl mb-3"
+                      animate={{ y: [0, -5, 0] }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                    >
+                      📁
+                    </motion.div>
+                    <p className="font-bold text-gray-700 text-lg">
+                      {file ? file.name : 'Click to upload or drag and drop'}
+                    </p>
+                    <p className="text-sm text-gray-500 mt-2">
+                      PDF, DOCX, DOC, or TXT (Max 50MB)
+                    </p>
+                  </label>
+                </div>
+                {file && (
+                  <motion.div
+                    className="mt-4 p-4 bg-green-50 border-2 border-green-200 rounded-lg"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                  >
+                    <p className="text-sm text-green-700 font-medium">
+                      ✅ File selected: <span className="font-bold">{file.name}</span>
+                    </p>
+                    <p className="text-xs text-green-600 mt-1">
+                      Size: {(file.size / 1024 / 1024).toFixed(2)} MB
+                    </p>
+                  </motion.div>
+                )}
+              </motion.div>
             )}
 
             {/* PDF Tab */}
             {activeTab === 'pdf' && (
-              <div>
-                <label className="block text-sm font-medium mb-2">PDF URL</label>
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                <label className="block text-sm font-bold mb-3 text-gray-700">PDF URL</label>
                 <Input
                   placeholder="https://example.com/document.pdf"
                   value={pdfUrl}
                   onChange={(e) => setPdfUrl(e.target.value)}
                   required
                 />
-                <p className="text-xs text-gray-500 mt-2">
-                  📌 Paste a direct link to a PDF file. The AI will extract text from it.
+                <p className="text-xs text-gray-500 mt-3 flex items-center gap-2">
+                  <span>📌</span> Paste a direct link to a PDF file. The AI will extract text from it.
                 </p>
-              </div>
+              </motion.div>
             )}
 
             {/* YouTube Tab */}
             {activeTab === 'youtube' && (
-              <div>
-                <label className="block text-sm font-medium mb-2">YouTube URL</label>
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                <label className="block text-sm font-bold mb-3 text-gray-700">YouTube URL</label>
                 <Input
                   placeholder="https://www.youtube.com/watch?v=..."
                   value={youtubeUrl}
                   onChange={(e) => setYoutubeUrl(e.target.value)}
                   required
                 />
-                <p className="text-xs text-gray-500 mt-2">
-                  📌 Paste a YouTube video link. The AI will extract the transcript and create questions.
+                <p className="text-xs text-gray-500 mt-3 flex items-center gap-2">
+                  <span>📌</span> Paste a YouTube video link. The AI will extract the transcript and create questions.
                 </p>
-              </div>
+              </motion.div>
             )}
 
             <Button type="submit" loading={loading} className="w-full">
               <Upload className="w-4 h-4 mr-2 inline" />
-              Upload Material
+              {loading ? 'Uploading...' : 'Upload Material'}
             </Button>
           </form>
         </Card>
       </motion.div>
 
       {fetchLoading ? (
-        <div className="text-center py-12">Loading your materials...</div>
+        <motion.div
+          className="text-center py-16"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+        >
+          <motion.div
+            className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4"
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+          />
+          <p className="text-gray-600 font-medium">Loading your materials...</p>
+        </motion.div>
       ) : contents.length > 0 ? (
-        <div>
-          <h2 className="text-2xl font-bold mb-4">📖 Your Materials</h2>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+          <div className="flex items-center gap-2 mb-6">
+            <h2 className="text-3xl font-bold">📖 Your Materials</h2>
+            <span className="text-sm font-medium px-3 py-1 bg-primary bg-opacity-10 text-primary rounded-full">
+              {contents.length} total
+            </span>
+          </div>
           
           {/* Filter Tabs */}
-          <div className="flex gap-2 mb-6 border-b">
+          <div className="flex gap-2 mb-8 border-b overflow-x-auto">
             <button
               onClick={() => setFilterTab('all')}
-              className={`px-4 py-2 font-medium border-b-2 transition-colors ${
+              className={`px-4 py-2 font-medium border-b-2 transition-colors whitespace-nowrap ${
                 filterTab === 'all'
                   ? 'border-primary text-primary'
                   : 'border-transparent text-gray-600 hover:text-gray-900'
@@ -355,7 +460,7 @@ export const Content = () => {
             </button>
             <button
               onClick={() => setFilterTab('text')}
-              className={`px-4 py-2 font-medium border-b-2 transition-colors ${
+              className={`px-4 py-2 font-medium border-b-2 transition-colors whitespace-nowrap ${
                 filterTab === 'text'
                   ? 'border-primary text-primary'
                   : 'border-transparent text-gray-600 hover:text-gray-900'
@@ -365,7 +470,7 @@ export const Content = () => {
             </button>
             <button
               onClick={() => setFilterTab('pdf')}
-              className={`px-4 py-2 font-medium border-b-2 transition-colors ${
+              className={`px-4 py-2 font-medium border-b-2 transition-colors whitespace-nowrap ${
                 filterTab === 'pdf'
                   ? 'border-primary text-primary'
                   : 'border-transparent text-gray-600 hover:text-gray-900'
@@ -375,7 +480,7 @@ export const Content = () => {
             </button>
             <button
               onClick={() => setFilterTab('youtube')}
-              className={`px-4 py-2 font-medium border-b-2 transition-colors ${
+              className={`px-4 py-2 font-medium border-b-2 transition-colors whitespace-nowrap ${
                 filterTab === 'youtube'
                   ? 'border-primary text-primary'
                   : 'border-transparent text-gray-600 hover:text-gray-900'
@@ -386,40 +491,66 @@ export const Content = () => {
           </div>
 
           {/* Materials Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {contents
               .filter(c => filterTab === 'all' || c.type === filterTab)
-              .map((content) => (
-              <Card key={content._id}>
-                <div className="flex justify-between items-start mb-2">
-                  <div className="flex items-center gap-2">
-                    {content.type === 'pdf' && <span className="text-xl">📄</span>}
-                    {content.type === 'youtube' && <span className="text-xl">🎥</span>}
-                    {content.type === 'text' && <span className="text-xl">📝</span>}
-                    <h3 className="font-bold text-lg">{content.title}</h3>
+              .map((content, idx) => (
+              <motion.div
+                key={content._id}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: idx * 0.05 }}
+              >
+                <Card className="h-full bg-gradient-to-br from-white to-gray-50 hover:shadow-lg transition-all hover:scale-105 cursor-pointer group">
+                  <div className="flex justify-between items-start mb-3">
+                    <div className="flex items-center gap-3">
+                      <span className="text-3xl group-hover:scale-110 transition-transform">
+                        {content.type === 'pdf' ? '📄' : content.type === 'youtube' ? '🎥' : '📝'}
+                      </span>
+                      <div className="flex-1">
+                        <h3 className="font-bold text-lg line-clamp-2 group-hover:text-primary transition-colors">
+                          {content.title}
+                        </h3>
+                        <p className="text-xs text-gray-500 mt-1 capitalize font-medium">
+                          {content.type === 'pdf' ? 'PDF' : content.type === 'youtube' ? 'YouTube' : 'Text'}
+                        </p>
+                      </div>
+                    </div>
+                    <motion.div
+                      whileHover={{ scale: 1.2 }}
+                      whileTap={{ scale: 0.9 }}
+                    >
+                      <Bookmark className="w-5 h-5 text-gray-300 hover:text-primary transition-colors" />
+                    </motion.div>
                   </div>
-                  <Bookmark className="w-5 h-5 text-gray-400 cursor-pointer hover:text-primary" />
-                </div>
-                <p className="text-gray-600 text-sm mb-4">
-                  {content.topics?.join(', ') || 'Processing...'}
-                </p>
-                <Button 
-                  variant="secondary" 
-                  className="w-full"
-                  onClick={() => handleGenerateQuiz(content)}
-                  disabled={generatingQuizId !== null}
-                >
-                  {generatingQuizId === content._id ? 'Generating...' : 'Generate Quiz'}
-                </Button>
-              </Card>
+                  <p className="text-gray-600 text-sm mb-5 line-clamp-2 min-h-10">
+                    {content.topics?.join(', ') || 'Processing...'}
+                  </p>
+                  <Button 
+                    variant="secondary" 
+                    className="w-full"
+                    onClick={() => handleGenerateQuiz(content)}
+                    disabled={generatingQuizId !== null}
+                  >
+                    {generatingQuizId === content._id ? '⏳ Generating...' : '✨ Generate Quiz'}
+                  </Button>
+                </Card>
+              </motion.div>
             ))}
           </div>
-        </div>
+        </motion.div>
       ) : (
-        <div className="text-center py-12 text-gray-500">
-          <p className="mb-4">No materials yet. Upload one to get started!</p>
-          <p className="text-sm">Choose from Text, PDF, or YouTube to begin.</p>
-        </div>
+        <motion.div
+          className="text-center py-16"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+        >
+          <Card className="bg-gradient-to-br from-gray-50 to-gray-100 border-2 border-dashed border-gray-300">
+            <div className="text-5xl mb-4">📚</div>
+            <p className="text-gray-600 font-medium mb-2">No materials yet</p>
+            <p className="text-sm text-gray-500">Upload content to get started with quizzes</p>
+          </Card>
+        </motion.div>
       )}
     </div>
   );

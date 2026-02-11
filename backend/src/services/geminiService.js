@@ -199,6 +199,26 @@ Text: ${text}`;
     }
   }
 
+  async generateContent(userPrompt, systemPrompt = '') {
+    try {
+      const fullPrompt = systemPrompt ? `${systemPrompt}\n\n${userPrompt}` : userPrompt;
+
+      console.log('🔄 Calling Ollama API at', OLLAMA_API);
+      const response = await axios.post(OLLAMA_API, {
+        model: 'mistral',
+        prompt: fullPrompt,
+        stream: false
+      });
+
+      console.log('✅ Ollama API response received');
+      return response.data.response || '';
+    } catch (error) {
+      console.error('❌ Ollama API error:', error.message);
+      console.warn('⚠️ FALLBACK: Using mock response (Ollama not responding)');
+      return this.getMockChatResponse(userPrompt);
+    }
+  }
+
   // Mock data for when API fails
   getMockSummary(text, type) {
     const sentences = text.split('.').filter(s => s.trim());
@@ -272,6 +292,23 @@ Text: ${text}`;
         reason: 'Push yourself to improve'
       }
     ];
+  }
+
+  getMockChatResponse(userPrompt) {
+    // Generate a contextual mock response based on the prompt
+    if (userPrompt.toLowerCase().includes('photosynthesis')) {
+      return `Photosynthesis is a fundamental biological process where plants convert light energy into chemical energy stored in glucose. It occurs in two main stages:
+
+1. **Light-dependent reactions** (in the thylakoid membrane): Light energy is absorbed by chlorophyll, splitting water molecules and producing ATP and NADPH.
+
+2. **Light-independent reactions/Calvin Cycle** (in the stroma): Uses ATP and NADPH to convert CO2 into glucose.
+
+The overall equation is: 6CO2 + 6H2O + light energy → C6H12O6 + 6O2
+
+This process is essential for life on Earth as it produces oxygen and forms the base of most food chains.`;
+    }
+    
+    return `Based on your study materials, here's what I found: This is a general response since the specific content wasn't available. Please ensure you've uploaded study materials related to your question. The system works best when you have relevant materials uploaded that I can reference to provide accurate, detailed answers.`;
   }
 }
 

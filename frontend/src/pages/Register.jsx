@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { Rocket } from 'lucide-react';
 import { Input } from '../components/Input';
 import { Button } from '../components/Button';
 import client from '../api/client';
@@ -31,21 +32,43 @@ export const Register = () => {
 
   return (
     <motion.div
-      className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary to-secondary p-4"
+      className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-teal-50 p-4 relative overflow-hidden"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
     >
+      {/* Decorative elements */}
+      <div className="absolute top-0 left-0 w-96 h-96 bg-blue-200 opacity-10 rounded-full -ml-48 -mt-48"></div>
+      <div className="absolute bottom-0 right-0 w-96 h-96 bg-teal-200 opacity-10 rounded-full -mr-48 -mb-48"></div>
+
       <motion.div
-        className="bg-white rounded-xl shadow-lg p-8 w-full max-w-md"
-        initial={{ y: 20 }}
-        animate={{ y: 0 }}
+        className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md relative z-10 border border-gray-200"
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.2 }}
       >
-        <h1 className="text-3xl font-bold mb-2">Get Started</h1>
-        <p className="text-gray-600 mb-6">Create your account to begin learning</p>
+        {/* Header */}
+        <div className="text-center mb-8">
+          <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-teal-600 rounded-lg flex items-center justify-center mx-auto mb-4">
+            <Rocket className="w-8 h-8 text-white" />
+          </div>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            Get Started
+          </h1>
+          <p className="text-gray-600">Create your account to begin learning</p>
+        </div>
 
-        {error && <div className="bg-error bg-opacity-10 text-error p-3 rounded-lg mb-4">{error}</div>}
+        {error && (
+          <motion.div
+            className="bg-red-50 border border-red-200 text-red-700 p-4 rounded-lg mb-6 flex items-start gap-3"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <span className="text-xl">⚠️</span>
+            <p className="text-sm">{error}</p>
+          </motion.div>
+        )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-5">
           <Input
             label="Full Name"
             type="text"
@@ -55,7 +78,7 @@ export const Register = () => {
             required
           />
           <Input
-            label="Email"
+            label="Email Address"
             type="email"
             placeholder="your@email.com"
             value={formData.email}
@@ -71,13 +94,18 @@ export const Register = () => {
             required
           />
           <Button type="submit" loading={loading} className="w-full">
-            Create Account
+            {loading ? 'Creating account...' : 'Create Account'}
           </Button>
         </form>
 
-        <p className="text-center text-gray-600 mt-6">
-          Already have an account? <Link to="/login" className="text-primary font-bold">Sign in</Link>
-        </p>
+        <div className="mt-8 pt-6 border-t border-gray-200">
+          <p className="text-center text-gray-600">
+            Already have an account?{' '}
+            <Link to="/login" className="text-blue-600 font-bold hover:underline">
+              Sign in here
+            </Link>
+          </p>
+        </div>
       </motion.div>
     </motion.div>
   );

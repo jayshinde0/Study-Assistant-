@@ -7,6 +7,7 @@ import contentRoutes from './routes/content.js';
 import quizRoutes from './routes/quiz.js';
 import analyticsRoutes from './routes/analytics.js';
 import resourceRoutes from './routes/resources.js';
+import chatbotRoutes from './routes/chatbot.js';
 import { errorHandler } from './middleware/errorHandler.js';
 
 dotenv.config();
@@ -29,6 +30,7 @@ app.use('/api/content', contentRoutes);
 app.use('/api/quiz', quizRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/resources', resourceRoutes);
+app.use('/api/chatbot', chatbotRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

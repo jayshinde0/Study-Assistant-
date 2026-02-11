@@ -1,12 +1,14 @@
 import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useAuthStore } from './store/authStore';
+import { Home } from './pages/Home';
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
 import { Dashboard } from './pages/Dashboard';
 import { Content } from './pages/Content';
 import { Quiz } from './pages/Quiz';
 import { Analytics } from './pages/Analytics';
+import { ChatBot } from './pages/ChatBot';
 import client from './api/client';
 
 const ProtectedRoute = ({ children }) => {
@@ -20,58 +22,87 @@ const Layout = ({ children }) => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex">
       {/* Sidebar */}
-      <aside className="w-64 bg-white shadow-lg">
-        <div className="p-6">
-          <h1 className="text-2xl font-bold text-primary mb-8">Study Assistant</h1>
-          <nav className="space-y-2">
-            <button
-              onClick={() => navigate('/dashboard')}
-              className="w-full text-left px-4 py-3 rounded-lg hover:bg-primary hover:text-white transition-colors"
-            >
-              📊 Dashboard
-            </button>
-            <button
-              onClick={() => navigate('/content')}
-              className="w-full text-left px-4 py-3 rounded-lg hover:bg-primary hover:text-white transition-colors"
-            >
-              📚 Content
-            </button>
-            <button
-              onClick={() => navigate('/analytics')}
-              className="w-full text-left px-4 py-3 rounded-lg hover:bg-primary hover:text-white transition-colors"
-            >
-              📈 Analytics
-            </button>
-          </nav>
+      <aside className="w-64 bg-white shadow-xl border-r border-slate-200 flex flex-col fixed h-screen">
+        {/* Logo Section */}
+        <div className="p-6 border-b border-slate-200">
+          <div className="flex items-center gap-2 mb-2">
+            <div className="w-10 h-10 bg-gradient-to-br from-primary to-blue-600 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-lg">📚</span>
+            </div>
+            <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+              Study
+            </h1>
+          </div>
+          <p className="text-xs text-gray-500 ml-12">Smart Learning Platform</p>
         </div>
-        <div className="absolute bottom-0 left-0 right-0 w-64 p-6 border-t">
-          <div className="mb-4">
-            <p className="text-sm text-gray-600">Logged in as</p>
-            <p className="font-bold text-gray-900">{user?.name}</p>
+
+        {/* Navigation */}
+        <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
+          <button
+            onClick={() => navigate('/dashboard')}
+            className="w-full text-left px-4 py-3 rounded-lg hover:bg-gradient-to-r hover:from-primary hover:to-blue-600 hover:text-white transition-all duration-200 font-medium text-gray-700 hover:shadow-md"
+          >
+            📊 Dashboard
+          </button>
+            <button
+            onClick={() => navigate('/content')}
+            className="w-full text-left px-4 py-3 rounded-lg hover:bg-gradient-to-r hover:from-primary hover:to-blue-600 hover:text-white transition-all duration-200 font-medium text-gray-700 hover:shadow-md"
+          >
+            📚 Content
+          </button>
+          <button
+            onClick={() => navigate('/analytics')}
+            className="w-full text-left px-4 py-3 rounded-lg hover:bg-gradient-to-r hover:from-primary hover:to-blue-600 hover:text-white transition-all duration-200 font-medium text-gray-700 hover:shadow-md"
+          >
+            📈 Analytics
+          </button>
+          <button
+            onClick={() => navigate('/chatbot')}
+            className="w-full text-left px-4 py-3 rounded-lg hover:bg-gradient-to-r hover:from-primary hover:to-blue-600 hover:text-white transition-all duration-200 font-medium text-gray-700 hover:shadow-md"
+          >
+            💬 Chat with AI
+          </button>
+        </nav>
+
+        {/* User Section - Fixed at bottom */}
+        <div className="border-t border-slate-200 p-4 space-y-3">
+          <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-3">
+            <p className="text-xs text-gray-600 font-semibold uppercase tracking-wide">Logged in as</p>
+            <p className="font-bold text-gray-900 truncate">{user?.name}</p>
           </div>
           <button
             onClick={() => {
               logout();
               navigate('/login');
             }}
-            className="w-full px-4 py-2 bg-error text-white rounded-lg hover:bg-opacity-90 transition-all"
+            className="w-full px-4 py-2 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg hover:from-red-600 hover:to-red-700 transition-all duration-200 font-medium shadow-md hover:shadow-lg"
           >
-            Logout
+            🚪 Logout
           </button>
         </div>
       </aside>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col">
-        <nav className="bg-white shadow-sm border-b">
+      <div className="flex-1 flex flex-col ml-64">
+        {/* Top Navigation */}
+        <nav className="bg-white shadow-sm border-b border-slate-200 sticky top-0 z-40">
           <div className="px-8 py-4 flex justify-between items-center">
-            <h2 className="text-xl font-semibold text-gray-800">Welcome to Study Assistant</h2>
-            <span className="text-gray-600">{user?.name}</span>
+            <h2 className="text-2xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
+              Welcome to Study Assistant
+            </h2>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-gradient-to-br from-primary to-blue-600 rounded-full flex items-center justify-center text-white font-bold">
+                {user?.name?.charAt(0).toUpperCase()}
+              </div>
+              <span className="text-gray-700 font-medium">{user?.name}</span>
+            </div>
           </div>
         </nav>
-        <main className="flex-1 p-8 overflow-auto">
+
+        {/* Main Content Area */}
+        <main className="flex-1 p-8 overflow-auto bg-gradient-to-br from-slate-50 to-slate-100">
           {children}
         </main>
       </div>
@@ -94,6 +125,7 @@ function App() {
   return (
     <Router>
       <Routes>
+        <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route
@@ -136,7 +168,14 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route path="/" element={<Navigate to="/dashboard" />} />
+        <Route
+          path="/chatbot"
+          element={
+            <ProtectedRoute>
+              <ChatBot />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </Router>
   );

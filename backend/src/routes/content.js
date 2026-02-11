@@ -1,10 +1,13 @@
 import express from 'express';
 import contentService from '../services/contentService.js';
 import youtubeService from '../services/youtubeService.js';
+import fileExtractionService from '../services/fileExtractionService.js';
 import { authenticate } from '../middleware/auth.js';
+import { upload } from '../middleware/multerConfig.js';
 import { AppError } from '../middleware/errorHandler.js';
 import axios from 'axios';
 import Content from '../models/Content.js';
+import fs from 'fs';
 
 const router = express.Router();
 
@@ -96,6 +99,79 @@ router.post('/upload', authenticate, async (req, res, next) => {
     res.status(201).json({ success: true, data: content });
   } catch (error) {
     next(error);
+  }
+});
+
+// NEW: File upload endpoint for local files (PDF, DOCX, TXT)
+router.post('/upload-file', authenticate, upload.single('file'), async (req, res, next) => {
+  let filePath = null;
+  try {
+    if (!req.file) {
+      throw new AppError('No file uploaded', 400);
+    }
+
+    const { title } = req.body;
+    if (!title || !title.trim()) {
+      throw new AppError('Missing title', 400);
+    }
+
+    filePath = req.file.path;
+    const fileType = req.file.mimetype;
+    const fileName = req.file.originalname;
+
+    console.log(`📄 Processing file upload: ${fileName}`);
+
+    // Validate file
+    fileExtractionService.validateFileType(fileName);
+    fileExtractionService.validateFileSize(req.file.size);
+
+    // Extract text from file
+    const extractedText = await fileExtractionService.extractText(filePath, fileType);
+
+    if (!extractedText || extractedText.trim().length === 0) {
+      throw new AppError('Could not extract text from file', 400);
+    }
+
+    // Determine file type
+    const ext = fileName.split('.').pop().toLowerCase();
+    let contentType = 'text';
+    if (ext === 'pdf') contentType = 'pdf';
+    else if (ext === 'docx' || ext === 'doc') contentType = 'docx';
+    else if (ext === 'txt') contentType = 'text';
+
+    // Create content with extracted text
+    const content = await contentService.uploadContent(
+      req.userId,
+      title.trim(),
+      extractedText,
+      contentType
+    );
+
+    console.log(`✅ File processed successfully - ID: ${content._id}, Type: ${contentType}`);
+    console.log(`   Extracted: ${extractedText.length} characters`);
+    console.log(`   Topics: ${content.topics.join(', ')}`);
+
+    res.status(201).json({
+      success: true,
+      data: {
+        ...content.toObject(),
+        extractedCharacters: extractedText.length,
+        fileName: fileName
+      }
+    });
+  } catch (error) {
+    // Clean up uploaded file on error
+    if (filePath) {
+      await fileExtractionService.cleanupFile(filePath);
+    }
+    next(error);
+  } finally {
+    // Clean up temporary file after processing
+    if (filePath) {
+      setTimeout(() => {
+        fileExtractionService.cleanupFile(filePath);
+      }, 1000);
+    }
   }
 });
 

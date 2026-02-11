@@ -22,6 +22,15 @@ router.get('/recommendations', authenticate, async (req, res, next) => {
   }
 });
 
+router.get('/topic-mastery', authenticate, async (req, res, next) => {
+  try {
+    const mastery = await analyticsService.getTopicMastery(req.userId);
+    res.json({ success: true, data: mastery });
+  } catch (error) {
+    next(error);
+  }
+});
+
 router.get('/trend', authenticate, async (req, res, next) => {
   try {
     const days = req.query.days || 30;
