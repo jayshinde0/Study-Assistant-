@@ -23,56 +23,86 @@ router.post('/message', authenticate, async (req, res, next) => {
     // Process message (works with or without content)
     const chatResponse = await chatbotService.processMessage(userId, message);
 
+    // Format sources for database storage - ensure clean objects
+    let formattedSources = [];
+    if (Array.isArray(chatResponse.sources) && chatResponse.sources.length > 0) {
+      formattedSources = chatResponse.sources.map(source => ({
+        contentId: source.id || null,
+        title: String(source.title || ''),
+        type: String(source.type || ''),
+        relevanceScore: Number(source.relevanceScore || 0)
+      }));
+    }
+
+    console.log('✅ Formatted sources:', JSON.stringify(formattedSources, null, 2));
+
+    // Build message object
+    const assistantMessage = {
+      role: 'assistant',
+      content: chatResponse.response,
+      suggestedQuestions: chatResponse.suggestedQuestions || [],
+      topics: chatResponse.topics || []
+    };
+
+    // Only add sources if they exist
+    if (formattedSources.length > 0) {
+      assistantMessage.sources = formattedSources;
+    }
+
     // Save to chat history
     let chatSession;
-    if (sessionId) {
-      chatSession = await ChatHistory.findByIdAndUpdate(
-        sessionId,
-        {
-          $push: {
-            messages: [
-              {
+    try {
+      if (sessionId) {
+        // Update existing session - push messages one at a time
+        await ChatHistory.findByIdAndUpdate(
+          sessionId,
+          {
+            $push: {
+              messages: {
                 role: 'user',
                 content: message,
                 timestamp: new Date()
-              },
-              {
-                role: 'assistant',
-                content: chatResponse.response,
-                sources: chatResponse.sources,
-                suggestedQuestions: chatResponse.suggestedQuestions,
-                topics: chatResponse.topics
               }
-            ]
+            },
+            $inc: { totalMessages: 1 },
+            updatedAt: new Date()
           },
-          $inc: { totalMessages: 2 },
-          $addToSet: { topicsDiscussed: { $each: chatResponse.topics } },
-          updatedAt: new Date()
-        },
-        { new: true }
-      );
-    } else {
-      // Create new session
-      chatSession = await ChatHistory.create({
-        userId,
-        sessionTitle: `Chat - ${new Date().toLocaleDateString()}`,
-        messages: [
+          { new: true }
+        );
+
+        chatSession = await ChatHistory.findByIdAndUpdate(
+          sessionId,
           {
-            role: 'user',
-            content: message,
-            timestamp: new Date()
+            $push: {
+              messages: assistantMessage
+            },
+            $inc: { totalMessages: 1 },
+            $addToSet: { topicsDiscussed: { $each: chatResponse.topics || [] } },
+            updatedAt: new Date()
           },
-          {
-            role: 'assistant',
-            content: chatResponse.response,
-            sources: chatResponse.sources,
-            suggestedQuestions: chatResponse.suggestedQuestions,
-            topics: chatResponse.topics
-          }
-        ],
-        totalMessages: 2,
-        topicsDiscussed: chatResponse.topics
-      });
+          { new: true }
+        );
+      } else {
+        // Create new session
+        chatSession = await ChatHistory.create({
+          userId,
+          sessionTitle: `Chat - ${new Date().toLocaleDateString()}`,
+          messages: [
+            {
+              role: 'user',
+              content: message,
+              timestamp: new Date()
+            },
+            assistantMessage
+          ],
+          totalMessages: 2,
+          topicsDiscussed: chatResponse.topics || []
+        });
+      }
+    } catch (dbError) {
+      console.error('❌ Database error:', dbError.message);
+      console.error('❌ Full error:', dbError);
+      throw dbError;
     }
 
     res.status(200).json({

@@ -25,10 +25,22 @@ const chatHistorySchema = new mongoose.Schema(
         },
         sources: [
           {
-            contentId: mongoose.Schema.Types.ObjectId,
-            title: String,
-            type: String,
-            relevanceScore: Number
+            contentId: {
+              type: mongoose.Schema.Types.ObjectId,
+              ref: 'Content'
+            },
+            title: {
+              type: String,
+              default: ''
+            },
+            type: {
+              type: String,
+              default: ''
+            },
+            relevanceScore: {
+              type: Number,
+              default: 0
+            }
           }
         ],
         suggestedQuestions: [String],

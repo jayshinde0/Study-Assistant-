@@ -13,6 +13,7 @@ import { useAuthStore } from '../store/authStore';
 export const ChatBot = () => {
   const navigate = useNavigate();
   const messagesEndRef = useRef(null);
+  const token = useAuthStore((state) => state.token);
 
   // State
   const [messages, setMessages] = useState([]);
@@ -60,7 +61,6 @@ export const ChatBot = () => {
     if (!message.trim() || loading) return;
 
     // Check if user is authenticated
-    const token = useAuthStore((state) => state.token);
     if (!token) {
       console.error('❌ No token found, user not authenticated');
       const errorMessage = {
@@ -229,11 +229,11 @@ export const ChatBot = () => {
             <p className="text-sm text-gray-500 text-center py-8">No chat history yet</p>
           ) : (
             sessions.map(session => (
-              <motion.button
+              <motion.div
                 key={session._id}
                 onClick={() => handleLoadSession(session._id)}
                 whileHover={{ x: 4 }}
-                className={`w-full text-left px-3 py-2 rounded-lg transition-all group ${
+                className={`w-full text-left px-3 py-2 rounded-lg transition-all group cursor-pointer ${
                   sessionId === session._id
                     ? 'bg-blue-100 border border-blue-300'
                     : 'hover:bg-gray-100 border border-transparent'
@@ -250,12 +250,12 @@ export const ChatBot = () => {
                   </div>
                   <button
                     onClick={(e) => handleDeleteSession(session._id, e)}
-                    className="opacity-0 group-hover:opacity-100 transition-opacity"
+                    className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0"
                   >
                     <Trash2 className="w-4 h-4 text-red-500 hover:text-red-700" />
                   </button>
                 </div>
-              </motion.button>
+              </motion.div>
             ))
           )}
         </div>
