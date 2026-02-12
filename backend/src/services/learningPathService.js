@@ -10,11 +10,10 @@ export class LearningPathService {
       throw new AppError('User not found', 404);
     }
 
-    // Get all user's content and extract topics
     const contents = await Content.find({ userId });
     const quizzes = await Quiz.find({ userId }).sort({ createdAt: -1 });
 
-    // Extract all unique topics
+    
     const allTopics = new Set();
     contents.forEach(content => {
       if (content.topics) {
