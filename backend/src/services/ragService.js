@@ -57,7 +57,6 @@ class RAGService {
         };
       });
 
-      // Sort by relevance and return top results
       return scoredContent
         .filter(c => c.relevanceScore > 0)
         .sort((a, b) => b.relevanceScore - a.relevanceScore)
