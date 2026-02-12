@@ -13,7 +13,7 @@ export class LearningPathService {
     const contents = await Content.find({ userId });
     const quizzes = await Quiz.find({ userId }).sort({ createdAt: -1 });
 
-    
+    // Extract all unique topics
     const allTopics = new Set();
     contents.forEach(content => {
       if (content.topics) {
