@@ -4,12 +4,9 @@ import Content from '../models/Content.js';
 import { AppError } from '../middleware/errorHandler.js';
 
 class ChatbotService {
-  /**
-   * Process user message and generate response
-   */
   async processMessage(userId, userMessage, contentIds = null) {
     try {
-      // Validate input
+
       if (!userMessage || userMessage.trim().length === 0) {
         throw new AppError('Message cannot be empty', 400);
       }
