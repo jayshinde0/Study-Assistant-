@@ -12,6 +12,8 @@ import learningPathRoutes from './routes/learningPath.js';
 import comparisonRoutes from './routes/comparison.js';
 import flashcardRoutes from './routes/flashcard.js';
 import studySessionRoutes from './routes/studySession.js';
+import searchRoutes from './routes/search.js';
+import profileRoutes from './routes/profile.js';
 import { errorHandler } from './middleware/errorHandler.js';
 
 dotenv.config();
@@ -39,6 +41,8 @@ app.use('/api/learning-path', learningPathRoutes);
 app.use('/api/comparison', comparisonRoutes);
 app.use('/api/flashcards', flashcardRoutes);
 app.use('/api/study-sessions', studySessionRoutes);
+app.use('/api/search', searchRoutes);
+app.use('/api/profile', profileRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

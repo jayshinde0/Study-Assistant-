@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
+import StudentProfile from '../models/StudentProfile.js';
 import { AppError } from '../middleware/errorHandler.js';
 
 export class AuthService {
@@ -12,11 +13,24 @@ export class AuthService {
     const user = new User({ name, email, password });
     await user.save();
 
+    // Create student profile
+    const profile = new StudentProfile({
+      userId: user._id,
+      name: user.name,
+      email: user.email,
+      username: user.username
+    });
+    await profile.save();
+
+    // Link profile to user
+    user.studentProfile = profile._id;
+    await user.save();
+
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
       expiresIn: '7d'
     });
 
-    return { user: { id: user._id, name: user.name, email: user.email }, token };
+    return { user: { id: user._id, name: user.name, email: user.email, username: user.username }, token };
   }
 
   async login(email, password) {
@@ -34,11 +48,11 @@ export class AuthService {
       expiresIn: '7d'
     });
 
-    return { user: { id: user._id, name: user.name, email: user.email }, token };
+    return { user: { id: user._id, name: user.name, email: user.email, username: user.username }, token };
   }
 
   async getProfile(userId) {
-    const user = await User.findById(userId).select('-password');
+    const user = await User.findById(userId).select('-password').populate('studentProfile');
     if (!user) {
       throw new AppError('User not found', 404);
     }

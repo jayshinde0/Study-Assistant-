@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Card } from '../components/Card';
 import { Button } from '../components/Button';
@@ -9,6 +9,7 @@ import { useAuthStore } from '../store/authStore';
 
 export const Compare = () => {
   const currentUser = useAuthStore((state) => state.user);
+  const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [comparison, setComparison] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -127,12 +128,12 @@ export const Compare = () => {
 
   return (
     <div className="space-y-8">
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+      <div>
         <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-2">
           👥 Compare Progress
         </h1>
         <p className="text-gray-600">See how you stack up against your friends!</p>
-      </motion.div>
+      </div>
 
       {/* Username Setup */}
       {!currentUser?.username && (
@@ -211,11 +212,7 @@ export const Compare = () => {
       {/* Loading State */}
       {loading && (
         <Card className="text-center py-12">
-          <motion.div
-            className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4"
-            animate={{ rotate: 360 }}
-            transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-          />
+          <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4 animate-spin" />
           <p className="text-gray-600">Comparing progress...</p>
         </Card>
       )}
@@ -229,11 +226,7 @@ export const Compare = () => {
 
       {/* Comparison Results */}
       {comparison && (
-        <motion.div
-          className="space-y-6"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-        >
+        <div className="space-y-6">
           {/* Header */}
           <Card className="bg-gradient-to-r from-primary to-secondary text-white">
             <div className="flex items-center justify-between">
@@ -249,33 +242,93 @@ export const Compare = () => {
             </div>
           </Card>
 
-          {/* Stats Comparison */}
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-            <Card className="text-center">
-              <p className="text-sm text-gray-600 mb-2">XP</p>
-              <p className="text-2xl font-bold text-primary">{comparison.currentUser.stats.xp}</p>
-              <p className="text-xs text-gray-500 mt-1">vs {comparison.targetUser.stats.xp}</p>
-            </Card>
-            <Card className="text-center">
-              <p className="text-sm text-gray-600 mb-2">Accuracy</p>
-              <p className="text-2xl font-bold text-green-600">{Math.round(comparison.currentUser.stats.averageAccuracy)}%</p>
-              <p className="text-xs text-gray-500 mt-1">vs {Math.round(comparison.targetUser.stats.averageAccuracy)}%</p>
-            </Card>
-            <Card className="text-center">
-              <p className="text-sm text-gray-600 mb-2">Quizzes</p>
-              <p className="text-2xl font-bold text-blue-600">{comparison.currentUser.stats.totalQuizzes}</p>
-              <p className="text-xs text-gray-500 mt-1">vs {comparison.targetUser.stats.totalQuizzes}</p>
-            </Card>
-            <Card className="text-center">
-              <p className="text-sm text-gray-600 mb-2">Streak</p>
-              <p className="text-2xl font-bold text-orange-600">{comparison.currentUser.stats.streak}</p>
-              <p className="text-xs text-gray-500 mt-1">vs {comparison.targetUser.stats.streak}</p>
-            </Card>
-            <Card className="text-center bg-purple-50">
-              <p className="text-sm text-gray-600 mb-2">Study Hours</p>
-              <p className="text-2xl font-bold text-purple-600">{comparison.currentUser.stats.totalStudyHours || 0}h</p>
-              <p className="text-xs text-gray-500 mt-1">vs {comparison.targetUser.stats.totalStudyHours || 0}h</p>
-            </Card>
+          {/* Profile Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Current User Profile */}
+            <div>
+              <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-200">
+                <div className="text-center mb-4">
+                  <div className="w-16 h-16 bg-gradient-to-br from-primary to-blue-600 rounded-full flex items-center justify-center text-white text-3xl mx-auto mb-3">
+                    👤
+                  </div>
+                  <h3 className="text-xl font-bold">{comparison.currentUser.name}</h3>
+                  <p className="text-sm text-gray-600">@{comparison.currentUser.username}</p>
+                </div>
+                <div className="space-y-3 border-t border-blue-200 pt-4">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-700">Total XP</span>
+                    <span className="font-bold text-primary">{comparison.currentUser.stats.xp}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-700">Accuracy</span>
+                    <span className="font-bold text-green-600">{Math.round(comparison.currentUser.stats.averageAccuracy)}%</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-700">Quizzes Taken</span>
+                    <span className="font-bold text-blue-600">{comparison.currentUser.stats.totalQuizzes}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-700">Current Streak</span>
+                    <span className="font-bold text-orange-600">{comparison.currentUser.stats.streak}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-700">Study Hours</span>
+                    <span className="font-bold text-purple-600">{comparison.currentUser.stats.totalStudyHours || 0}h</span>
+                  </div>
+                </div>
+              </Card>
+            </div>
+
+            {/* Target User Profile */}
+            <div>
+              <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200">
+                <div className="text-center mb-4">
+                  <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center text-white text-3xl mx-auto mb-3">
+                    👤
+                  </div>
+                  <h3 className="text-xl font-bold">{comparison.targetUser.name}</h3>
+                  <p className="text-sm text-gray-600">@{comparison.targetUser.username}</p>
+                </div>
+                <div className="space-y-3 border-t border-green-200 pt-4">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-700">Total XP</span>
+                    <span className="font-bold text-green-600">{comparison.targetUser.stats.xp}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-700">Accuracy</span>
+                    <span className="font-bold text-green-600">{Math.round(comparison.targetUser.stats.averageAccuracy)}%</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-700">Quizzes Taken</span>
+                    <span className="font-bold text-blue-600">{comparison.targetUser.stats.totalQuizzes}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-700">Current Streak</span>
+                    <span className="font-bold text-orange-600">{comparison.targetUser.stats.streak}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-700">Study Hours</span>
+                    <span className="font-bold text-purple-600">{comparison.targetUser.stats.totalStudyHours || 0}h</span>
+                  </div>
+                </div>
+              </Card>
+            </div>
+          </div>
+
+          {/* View Full Profiles */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Button
+              onClick={() => navigate(`/profile/${comparison.currentUser.username}`)}
+              className="w-full"
+            >
+              View {comparison.currentUser.name}'s Full Profile
+            </Button>
+            <Button
+              onClick={() => navigate(`/profile/${comparison.targetUser.username}`)}
+              className="w-full"
+            >
+              View {comparison.targetUser.name}'s Full Profile
+            </Button>
           </div>
 
           {/* Progress Trend Comparison */}
@@ -369,16 +422,12 @@ export const Compare = () => {
               </ResponsiveContainer>
             </Card>
           )}
-        </motion.div>
+        </div>
       )}
 
       {/* Username Modal */}
       {showUsernameModal && (
-        <motion.div
-          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-        >
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <Card className="max-w-md w-full">
             <h2 className="text-2xl font-bold mb-4">Set Your Username</h2>
             <p className="text-sm text-gray-600 mb-4">
@@ -410,7 +459,7 @@ export const Compare = () => {
               </Button>
             </div>
           </Card>
-        </motion.div>
+        </div>
       )}
     </div>
   );

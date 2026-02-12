@@ -60,14 +60,9 @@ export const Pomodoro = () => {
   };
 
   const startTimer = async () => {
-    if (!selectedTopic) {
-      alert('Please select a topic');
-      return;
-    }
-
     try {
       const res = await client.post('/study-sessions/start', {
-        topic: selectedTopic,
+        topic: selectedTopic || 'General Study', // Default to 'General Study' if no topic selected
         duration,
         type: isBreak ? 'break' : 'focus'
       });
@@ -148,14 +143,14 @@ export const Pomodoro = () => {
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Select Topic
+                    Select Topic <span className="text-gray-500 text-xs">(Optional)</span>
                   </label>
                   <select
                     value={selectedTopic}
                     onChange={(e) => setSelectedTopic(e.target.value)}
                     className="w-full p-3 border-2 border-gray-200 rounded-lg focus:border-primary focus:outline-none"
                   >
-                    <option value="">Choose a topic...</option>
+                    <option value="">General Study</option>
                     {topics.map(topic => (
                       <option key={topic} value={topic}>{topic}</option>
                     ))}

@@ -11,6 +11,10 @@ const userSchema = new mongoose.Schema({
   lastStudyDate: { type: Date },
   totalQuizzesTaken: { type: Number, default: 0 },
   averageAccuracy: { type: Number, default: 0 },
+  studentProfile: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'StudentProfile'
+  },
   createdAt: { type: Date, default: Date.now }
 });
 

@@ -125,32 +125,43 @@ export class LearningPathService {
 
   sortByLearningOrder(path) {
     // Sort by:
-    // 1. Topics with no prerequisites first
-    // 2. Topics that are struggling (need review)
-    // 3. Topics not started
-    // 4. Topics in progress
-    // 5. Mastered topics last
+    // 1. Mastered topics (100% accuracy) first
+    // 2. Topics in progress (70-99% accuracy)
+    // 3. Topics that are struggling (need review)
+    // 4. Topics not started
+    // 5. Within each group, sort by accuracy (highest first)
 
     return path.sort((a, b) => {
-      // Prioritize struggling topics
+      // 1. Mastered topics (100% accuracy) first
+      if (a.accuracy === 100 && b.accuracy !== 100) return -1;
+      if (b.accuracy === 100 && a.accuracy !== 100) return 1;
+
+      // 2. In-progress topics (70-99% accuracy)
+      const aInProgress = a.accuracy >= 70 && a.accuracy < 100;
+      const bInProgress = b.accuracy >= 70 && b.accuracy < 100;
+      if (aInProgress && !bInProgress) return -1;
+      if (bInProgress && !aInProgress) return 1;
+
+      // 3. Struggling topics (need review)
       if (a.status === 'struggling' && b.status !== 'struggling') return -1;
       if (b.status === 'struggling' && a.status !== 'struggling') return 1;
 
-      // Then not-started topics
+      // 4. Not-started topics
       if (a.status === 'not-started' && b.status !== 'not-started') return -1;
       if (b.status === 'not-started' && a.status !== 'not-started') return 1;
 
-      // Then in-progress
-      if (a.status === 'in-progress' && b.status !== 'in-progress') return -1;
-      if (b.status === 'in-progress' && a.status !== 'in-progress') return 1;
+      // Within same group, sort by accuracy (highest first)
+      if (a.accuracy !== b.accuracy) {
+        return b.accuracy - a.accuracy;
+      }
 
       // Topics with fewer prerequisites come first
       if (a.prerequisites.length !== b.prerequisites.length) {
         return a.prerequisites.length - b.prerequisites.length;
       }
 
-      // Finally by accuracy (lower accuracy first for review)
-      return a.accuracy - b.accuracy;
+      // Finally by topic name alphabetically
+      return a.topic.localeCompare(b.topic);
     });
   }
 

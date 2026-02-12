@@ -6,24 +6,17 @@ import { AppError } from '../middleware/errorHandler.js';
 
 const router = express.Router();
 
-/**
- * POST /api/chatbot/message
- * Send a message to the chatbot
- */
 router.post('/message', authenticate, async (req, res, next) => {
   try {
     const { message, sessionId } = req.body;
     const userId = req.userId;
 
-    // Validate input
     if (!message || message.trim().length === 0) {
       throw new AppError('Message cannot be empty', 400);
     }
 
-    // Process message (works with or without content)
     const chatResponse = await chatbotService.processMessage(userId, message);
 
-    // Format sources for database storage - ensure clean objects
     let formattedSources = [];
     if (Array.isArray(chatResponse.sources) && chatResponse.sources.length > 0) {
       formattedSources = chatResponse.sources.map(source => ({
@@ -36,7 +29,6 @@ router.post('/message', authenticate, async (req, res, next) => {
 
     console.log('✅ Formatted sources:', JSON.stringify(formattedSources, null, 2));
 
-    // Build message object
     const assistantMessage = {
       role: 'assistant',
       content: chatResponse.response,
@@ -44,16 +36,13 @@ router.post('/message', authenticate, async (req, res, next) => {
       topics: chatResponse.topics || []
     };
 
-    // Only add sources if they exist
     if (formattedSources.length > 0) {
       assistantMessage.sources = formattedSources;
     }
 
-    // Save to chat history
     let chatSession;
     try {
       if (sessionId) {
-        // Update existing session - push messages one at a time
         await ChatHistory.findByIdAndUpdate(
           sessionId,
           {

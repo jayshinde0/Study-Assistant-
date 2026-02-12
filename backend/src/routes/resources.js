@@ -1,44 +1,121 @@
 import express from 'express';
-import axios from 'axios';
 import { authenticate } from '../middleware/auth.js';
+import externalResourceService from '../services/externalResourceService.js';
 import { AppError } from '../middleware/errorHandler.js';
-import geminiService from '../services/geminiService.js';
 
 const router = express.Router();
 
-router.post('/youtube', authenticate, async (req, res, next) => {
+/**
+ * GET /api/resources/topic/:topic
+ * Get learning resources for a specific topic
+ */
+router.get('/topic/:topic', authenticate, async (req, res, next) => {
   try {
-    const { url, title } = req.body;
-    if (!url) {
-      throw new AppError('Missing URL', 400);
+    const { topic } = req.params;
+
+    if (!topic || topic.trim().length === 0) {
+      throw new AppError('Topic is required', 400);
     }
 
-    // In production, use YouTube API to extract transcript
-    const summary = await geminiService.generateSummary(
-      `YouTube video: ${title || url}. Please provide a summary of what this video likely covers based on the URL.`,
-      'detailed'
-    );
+    console.log(`📚 Fetching resources for topic: ${topic}`);
 
-    res.json({ success: true, data: { url, title, summary } });
+    // First try to get curated resources
+    let resources = externalResourceService.getCuratedResources(topic);
+
+    // If no curated resources, fetch from external sources
+    if (!resources) {
+      resources = await externalResourceService.getResourcesForTopic(topic);
+    }
+
+    res.status(200).json({
+      success: true,
+      data: {
+        topic,
+        resources,
+        timestamp: new Date()
+      }
+    });
   } catch (error) {
     next(error);
   }
 });
 
-router.post('/web', authenticate, async (req, res, next) => {
+/**
+ * GET /api/resources/videos/:topic
+ * Get YouTube videos for a topic
+ */
+router.get('/videos/:topic', authenticate, async (req, res, next) => {
   try {
-    const { url } = req.body;
-    if (!url) {
-      throw new AppError('Missing URL', 400);
+    const { topic } = req.params;
+
+    if (!topic || topic.trim().length === 0) {
+      throw new AppError('Topic is required', 400);
     }
 
-    // In production, use web scraping to extract content
-    const summary = await geminiService.generateSummary(
-      `Web article from ${url}. Please provide a summary of what this article likely covers.`,
-      'detailed'
-    );
+    const videos = await externalResourceService.fetchYouTubeVideos(topic);
 
-    res.json({ success: true, data: { url, summary } });
+    res.status(200).json({
+      success: true,
+      data: {
+        topic,
+        videos,
+        count: videos.length
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+/**
+ * GET /api/resources/articles/:topic
+ * Get articles for a topic
+ */
+router.get('/articles/:topic', authenticate, async (req, res, next) => {
+  try {
+    const { topic } = req.params;
+
+    if (!topic || topic.trim().length === 0) {
+      throw new AppError('Topic is required', 400);
+    }
+
+    const articles = await externalResourceService.fetchArticles(topic);
+
+    res.status(200).json({
+      success: true,
+      data: {
+        topic,
+        articles,
+        count: articles.length
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+/**
+ * GET /api/resources/courses/:topic
+ * Get courses for a topic
+ */
+router.get('/courses/:topic', authenticate, async (req, res, next) => {
+  try {
+    const { topic } = req.params;
+
+    if (!topic || topic.trim().length === 0) {
+      throw new AppError('Topic is required', 400);
+    }
+
+    const courses = await externalResourceService.fetchCourses(topic);
+
+    res.status(200).json({
+      success: true,
+      data: {
+        topic,
+        courses,
+        count: courses.length
+      }
+    });
   } catch (error) {
     next(error);
   }

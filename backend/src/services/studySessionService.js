@@ -1,5 +1,6 @@
 import StudySession from '../models/StudySession.js';
 import Content from '../models/Content.js';
+import StudentProfile from '../models/StudentProfile.js';
 import { AppError } from '../middleware/errorHandler.js';
 
 export class StudySessionService {
@@ -26,6 +27,15 @@ export class StudySessionService {
     session.completed = true;
     session.endTime = new Date();
     await session.save();
+
+    // Update student profile study hours
+    const profile = await StudentProfile.findOne({ userId });
+    if (profile) {
+      const durationHours = session.duration / 60;
+      profile.totalStudyHours = (profile.totalStudyHours || 0) + durationHours;
+      profile.lastActiveAt = new Date();
+      await profile.save();
+    }
 
     return session;
   }

@@ -1,6 +1,7 @@
 import Quiz from '../models/Quiz.js';
 import Content from '../models/Content.js';
 import User from '../models/User.js';
+import StudentProfile from '../models/StudentProfile.js';
 import geminiService from './geminiService.js';
 import topicProgressService from './topicProgressService.js';
 import { AppError } from '../middleware/errorHandler.js';
@@ -98,6 +99,17 @@ export class QuizService {
     user.averageAccuracy = ((user.averageAccuracy * (user.totalQuizzesTaken - 1)) + quiz.accuracy) / user.totalQuizzesTaken;
     user.xp += Math.floor(quiz.accuracy / 10);
     await user.save();
+
+    // Update student profile stats
+    const profile = await StudentProfile.findOne({ userId });
+    if (profile) {
+      profile.totalQuizzesTaken = user.totalQuizzesTaken;
+      profile.averageAccuracy = user.averageAccuracy;
+      profile.totalXP = user.xp;
+      profile.averageQuizScore = ((profile.averageQuizScore * (profile.totalQuizzesTaken - 1)) + quiz.accuracy) / profile.totalQuizzesTaken;
+      profile.lastActiveAt = new Date();
+      await profile.save();
+    }
 
     console.log(`✅ Quiz ${quizId} completed: ${correctCount}/${quiz.questions.length} (${quiz.accuracy}%)`);
     return quiz;

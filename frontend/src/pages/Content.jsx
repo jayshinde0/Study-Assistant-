@@ -24,6 +24,7 @@ export const Content = () => {
   const [selectedContent, setSelectedContent] = useState(null);
   const [generatingSummary, setGeneratingSummary] = useState(false);
   const [summaryLevel, setSummaryLevel] = useState('brief');
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     fetchContents();
@@ -576,10 +577,25 @@ export const Content = () => {
             </button>
           </div>
 
+          {/* Search Input */}
+          <div className="mb-6">
+            <input
+              type="text"
+              placeholder="Search materials by title or topic..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-primary focus:outline-none transition-colors"
+            />
+          </div>
+
           {/* Materials Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {contents
               .filter(c => filterTab === 'all' || c.type === filterTab)
+              .filter(c =>
+                c.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                (c.topics && c.topics.some(t => t.toLowerCase().includes(searchQuery.toLowerCase())))
+              )
               .map((content, idx) => (
               <motion.div
                 key={content._id}

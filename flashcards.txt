@@ -1,0 +1,28 @@
+Fill in the blank: ACID properties ensure data consistency:<br>- Atomicity: All or nothing<br>- Consistency: Valid state ______ valid state<br>- Isolation: No interference between transactions<br>- Durability: Permanent once committed<br><br>7	to	General medium
+Fill in the blank: TRANSACTIONS<br>A transaction is a sequence of operations ______ must all succeed or all fail	that	General medium
+Fill in the blank: Types include:<br>- Primary Index: On primary key<br>- Secondary ______ On non-key attributes<br>- Composite Index: On multiple columns<br><br>6	Index:	General medium
+Fill in the blank: INDEXING<br>Indexes improve query performance by creating ______ sorted structure for quick data retrieval	a	General medium
+Fill in the blank: Normal forms include:<br>- 1NF (First Normal Form): Eliminate repeating groups<br>- 2NF (Second Normal Form): Remove ______ dependencies<br>- 3NF (Third Normal Form): Remove transitive dependencies<br>- BCNF (Boyce-Codd Normal Form): Stricter than 3NF<br><br>5	partial	General medium
+Fill in the blank: NORMALIZATION<br>Normalization is the process of ______ data to reduce redundancy	organizing	General medium
+Fill in the blank: Main commands include:<br>- SELECT: Retrieve data<br>- INSERT: Add new data<br>- UPDATE: Modify ______ data<br>- DELETE: Remove data<br>- CREATE: Create tables<br>- ALTER: Modify table structure<br><br>4	existing	General medium
+Fill in the blank: SQL (STRUCTURED QUERY LANGUAGE)<br>SQL is used to ______ and manipulate data in relational databases	query	General medium
+Fill in the blank: Foreign keys establish ______ between tables	relationships	General medium
+Fill in the blank: Each table has a primary ______ that uniquely identifies each row	key	General medium
+Fill in the blank: INTRODUCTION TO DBMS<br>A Database Management System ______ is software that manages databases	(DBMS)	General medium
+Fill in the blank: RELATIONAL DATABASE MODEL<br>The relational model organizes data into ______ (relations) with rows (tuples) and columns (attributes)	tables	General medium
+Fill in the blank: Key features include data security, ______ access, and data integrity	concurrent	General medium
+Fill in the blank: It provides an interface for users and ______ to create, read, update, and delete data	applications	General medium
+Fill in the blank: ACID properties <br>ensure data consistency: <br>- Atomicity: All or nothing <br>- Consistency: Valid state to ______ state <br>- Isolation: No interference between transactions <br>- Durability: Permanent once committed <br> <br>7	valid	General medium
+Fill in the blank: TRANSACTIONS <br>A transaction is a sequence of ______ that must all succeed or all fail	operations	General medium
+Fill in the blank: Types include: <br>- Primary Index: On primary key <br>- Secondary Index: ______ non-key attributes <br>- Composite Index: On multiple columns <br> <br>6	On	General medium
+Fill in the blank: INDEXING <br>Indexes improve query performance by creating ______ sorted structure for quick data retrieval	a	General medium
+Fill in the blank: Normal forms include: <br>- 1NF (First Normal Form): Eliminate repeating groups <br>- 2NF (Second Normal Form): Remove partial ______ <br>- 3NF (Third Normal Form): Remove transitive dependencies <br>- BCNF (Boyce-Codd Normal Form): Stricter than 3NF <br> <br>5	dependencies	General medium
+Fill in the blank: NORMALIZATION <br>Normalization is the process ______ organizing data to reduce redundancy	of	General medium
+Fill in the blank: Main commands include: <br>- SELECT: Retrieve data <br>- INSERT: Add new data <br>- UPDATE: Modify existing ______ <br>- DELETE: Remove data <br>- CREATE: Create tables <br>- ALTER: Modify table structure <br> <br>4	data	General medium
+Fill in the blank: SQL (STRUCTURED QUERY LANGUAGE) <br>SQL is used ______ query and manipulate data in relational databases	to	General medium
+Fill in the blank: Foreign keys <br>establish ______ between tables	relationships	General medium
+Fill in the blank: Each table has a primary ______ that uniquely identifies each row	key	General medium
+Fill in the blank: RELATIONAL DATABASE MODEL <br>The relational model organizes data ______ tables (relations) with rows (tuples) and columns <br>(attributes)	into	General medium
+Fill in the blank: Key features <br>include data security, ______ access, and data integrity	concurrent	General medium
+Fill in the blank: It provides <br>an interface for users and ______ to create, read, update, and delete data	applications	General medium
+Fill in the blank: INTRODUCTION TO DBMS <br>A Database Management ______ (DBMS) is software that manages databases	System	General medium

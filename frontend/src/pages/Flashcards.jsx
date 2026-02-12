@@ -14,6 +14,7 @@ export const Flashcards = () => {
   const [stats, setStats] = useState(null);
   const [mode, setMode] = useState('select'); // select, study, complete
   const [contentFlashcardCounts, setContentFlashcardCounts] = useState({});
+  const [searchQuery, setSearchQuery] = useState('');
 
   const x = useMotionValue(0);
   const rotate = useTransform(x, [-200, 200], [-25, 25]);
@@ -208,56 +209,72 @@ export const Flashcards = () => {
             </Button>
           </div>
 
+          {/* Search Input */}
+          <div className="mb-6">
+            <input
+              type="text"
+              placeholder="Search flashcards by content title or topic..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-primary focus:outline-none transition-colors"
+            />
+          </div>
+
           {contents.length === 0 ? (
             <Card className="text-center py-12">
               <p className="text-gray-600">No content available. Upload some study materials first!</p>
             </Card>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {contents.map(content => {
-                const flashcardCount = contentFlashcardCounts[content._id] || 0;
-                const hasFlashcards = flashcardCount > 0;
+              {contents
+                .filter(content =>
+                  content.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                  (content.topics && content.topics.some(t => t.toLowerCase().includes(searchQuery.toLowerCase())))
+                )
+                .map(content => {
+                  const flashcardCount = contentFlashcardCounts[content._id] || 0;
+                  const hasFlashcards = flashcardCount > 0;
 
-                return (
-                  <Card key={content._id} className="hover:shadow-lg transition-all">
-                    <div className="flex items-center gap-3 mb-4">
-                      <span className="text-3xl">
-                        {content.type === 'pdf' ? '📄' : content.type === 'youtube' ? '🎥' : '📝'}
-                      </span>
-                      <div className="flex-1">
-                        <h3 className="font-bold line-clamp-2">{content.title}</h3>
-                        <p className="text-xs text-gray-500 capitalize">{content.type}</p>
+                  return (
+                    <Card key={content._id} className="hover:shadow-lg transition-all">
+                      <div className="flex items-center gap-3 mb-4">
+                        <span className="text-3xl">
+                          {content.type === 'pdf' ? '📄' : content.type === 'youtube' ? '🎥' : '📝'}
+                        </span>
+                        <div className="flex-1">
+                          <h3 className="font-bold line-clamp-2">{content.title}</h3>
+                          <p className="text-xs text-gray-500 capitalize">{content.type}</p>
+                          {hasFlashcards && (
+                            <p className="text-xs text-green-600 font-medium mt-1">
+                              ✅ {flashcardCount} flashcards
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button
+                          className="flex-1"
+                          onClick={() => {
+                            setSelectedContent(content);
+                            generateFlashcards(content._id);
+                          }}
+                          loading={loading}
+                        >
+                          {hasFlashcards ? '📚 Study' : '✨ Generate'}
+                        </Button>
                         {hasFlashcards && (
-                          <p className="text-xs text-green-600 font-medium mt-1">
-                            ✅ {flashcardCount} flashcards
-                          </p>
+                          <Button
+                            variant="secondary"
+                            className="px-3"
+                            onClick={() => deleteFlashcards(content._id)}
+                          >
+                            🗑️
+                          </Button>
                         )}
                       </div>
-                    </div>
-                    <div className="flex gap-2">
-                      <Button
-                        className="flex-1"
-                        onClick={() => {
-                          setSelectedContent(content);
-                          generateFlashcards(content._id);
-                        }}
-                        loading={loading}
-                      >
-                        {hasFlashcards ? '📚 Study' : '✨ Generate'}
-                      </Button>
-                      {hasFlashcards && (
-                        <Button
-                          variant="secondary"
-                          className="px-3"
-                          onClick={() => deleteFlashcards(content._id)}
-                        >
-                          🗑️
-                        </Button>
-                      )}
-                    </div>
-                  </Card>
-                );
-              })}
+                    </Card>
+                  );
+                })}
             </div>
           )}
         </div>

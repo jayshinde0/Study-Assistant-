@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useAuthStore } from './store/authStore';
+import { SearchBar } from './components/SearchBar';
 import { Home } from './pages/Home';
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
@@ -13,6 +14,7 @@ import { LearningPath } from './pages/LearningPath';
 import { Compare } from './pages/Compare';
 import { Flashcards } from './pages/Flashcards';
 import { Pomodoro } from './pages/Pomodoro';
+import { Profile } from './pages/Profile';
 import client from './api/client';
 
 const ProtectedRoute = ({ children }) => {
@@ -92,6 +94,12 @@ const Layout = ({ children }) => {
           >
             💬 Chat with AI
           </button>
+          <button
+            onClick={() => navigate(`/profile/${user?.username}`)}
+            className="w-full text-left px-4 py-3 rounded-lg hover:bg-gradient-to-r hover:from-primary hover:to-blue-600 hover:text-white transition-all duration-200 font-medium text-gray-700 hover:shadow-md"
+          >
+            👤 My Profile
+          </button>
         </nav>
 
         {/* User Section - Fixed at bottom */}
@@ -116,11 +124,14 @@ const Layout = ({ children }) => {
       <div className="flex-1 flex flex-col ml-64">
         {/* Top Navigation */}
         <nav className="bg-white shadow-sm border-b border-slate-200 sticky top-0 z-40">
-          <div className="px-8 py-4 flex justify-between items-center">
-            <h2 className="text-2xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
+          <div className="px-8 py-4 flex justify-between items-center gap-6">
+            <h2 className="text-2xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent whitespace-nowrap">
               Welcome to Study Assistant
             </h2>
-            <div className="flex items-center gap-3">
+            <div className="flex-1 max-w-md">
+              <SearchBar />
+            </div>
+            <div className="flex items-center gap-3 flex-shrink-0">
               <div className="w-10 h-10 bg-gradient-to-br from-primary to-blue-600 rounded-full flex items-center justify-center text-white font-bold">
                 {user?.name?.charAt(0).toUpperCase()}
               </div>
@@ -241,6 +252,16 @@ function App() {
           element={
             <ProtectedRoute>
               <ChatBot />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile/:username"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Profile />
+              </Layout>
             </ProtectedRoute>
           }
         />
