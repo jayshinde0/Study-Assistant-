@@ -303,7 +303,7 @@ export const Flashcards = () => {
 
           {/* Flashcard */}
           <motion.div
-            key={currentCard._id} // Force re-render on card change
+            key={currentCard._id}
             className="relative h-96 cursor-pointer"
             style={{ x, rotate, opacity }}
             drag="x"
@@ -311,29 +311,20 @@ export const Flashcards = () => {
             onDragEnd={handleDragEnd}
             onClick={() => setIsFlipped(!isFlipped)}
           >
-            <motion.div
-              className="absolute inset-0"
-              animate={{ rotateY: isFlipped ? 180 : 0 }}
-              transition={{ duration: 0.6 }}
-              style={{ transformStyle: 'preserve-3d' }}
-            >
-              {/* Front */}
-              <Card
-                className="absolute inset-0 flex items-center justify-center text-center p-8 bg-gradient-to-br from-blue-50 to-indigo-50"
-                style={{ backfaceVisibility: 'hidden' }}
-              >
+            {/* Front - Question */}
+            {!isFlipped && (
+              <Card className="absolute inset-0 flex items-center justify-center text-center p-8 bg-gradient-to-br from-blue-50 to-indigo-50">
                 <div>
                   <p className="text-sm text-gray-500 mb-4">Question</p>
                   <p className="text-2xl font-bold">{currentCard.front}</p>
                   <p className="text-sm text-gray-400 mt-6">Tap to flip</p>
                 </div>
               </Card>
+            )}
 
-              {/* Back */}
-              <Card
-                className="absolute inset-0 flex items-center justify-center text-center p-8 bg-gradient-to-br from-green-50 to-emerald-50"
-                style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
-              >
+            {/* Back - Answer */}
+            {isFlipped && (
+              <Card className="absolute inset-0 flex items-center justify-center text-center p-8 bg-gradient-to-br from-green-50 to-emerald-50">
                 <div>
                   <p className="text-sm text-gray-500 mb-4">Answer</p>
                   <p className="text-xl">{currentCard.back}</p>
@@ -347,7 +338,7 @@ export const Flashcards = () => {
                   </div>
                 </div>
               </Card>
-            </motion.div>
+            )}
           </motion.div>
 
           {/* Swipe Instructions */}

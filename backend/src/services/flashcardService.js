@@ -52,7 +52,7 @@ Text: ${text.substring(0, 3000)}`;
 
       const OLLAMA_API = 'http://localhost:11434/api/generate';
       const response = await axios.post(OLLAMA_API, {
-        model: 'phi3',
+        model: 'mistral',
         prompt: prompt,
         stream: false
       }, {

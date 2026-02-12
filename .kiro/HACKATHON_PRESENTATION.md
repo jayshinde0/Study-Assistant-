@@ -93,7 +93,6 @@
 ### 2.1 Content Management & AI Summarization
 
 **Feature:** Upload and summarize study materials
-
 **Technical Details:**
 - **File Processing:** PDF extraction using `fileExtractionService.js`
 - **AI Summarization:** Google Gemini API generates concise summaries
