@@ -6,6 +6,7 @@ import { Button } from '../components/Button';
 import { Input } from '../components/Input';
 import client from '../api/client';
 import { useAuthStore } from '../store/authStore';
+import { Search, AlertTriangle, AlertCircle, User, TrendingUp, Clock, BarChart3, Users } from 'lucide-react';
 
 export const Compare = () => {
   const currentUser = useAuthStore((state) => state.user);
@@ -129,19 +130,23 @@ export const Compare = () => {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-2">
-          👥 Compare Progress
-        </h1>
-        <p className="text-gray-600">See how you stack up against your friends!</p>
+        <div className="flex items-center gap-3 mb-2">
+          <Users className="w-8 h-8 text-primary" />
+          <h1 className="text-4xl font-bold text-text-primary">Compare Progress</h1>
+        </div>
+        <p className="text-text-secondary">See how you stack up against your friends!</p>
       </div>
 
       {/* Username Setup */}
       {!currentUser?.username && (
-        <Card className="bg-yellow-50 border-2 border-yellow-300">
+        <Card className="bg-warning bg-opacity-10 border-2 border-warning">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="font-bold text-lg mb-1">⚠️ Set Your Username</h3>
-              <p className="text-sm text-gray-600">You need a username before others can compare with you</p>
+              <div className="flex items-center gap-2 mb-1">
+                <AlertTriangle className="w-5 h-5 text-warning" />
+                <h3 className="font-bold text-lg">Set Your Username</h3>
+              </div>
+              <p className="text-sm text-text-secondary">You need a username before others can compare with you</p>
             </div>
             <Button onClick={() => setShowUsernameModal(true)}>
               Set Username
@@ -152,12 +157,12 @@ export const Compare = () => {
 
       {/* Your Username Display */}
       {currentUser?.username && (
-        <Card className="bg-gradient-to-r from-blue-50 to-indigo-50">
+        <Card className="bg-bg-primary border-2 border-border">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 mb-1">Your Username</p>
-              <p className="text-2xl font-bold">@{currentUser.username}</p>
-              <p className="text-xs text-gray-500 mt-1">Share this with friends to let them compare with you</p>
+              <p className="text-sm text-text-secondary mb-1">Your Username</p>
+              <p className="text-2xl font-bold text-text-primary">@{currentUser.username}</p>
+              <p className="text-xs text-text-secondary mt-1">Share this with friends to let them compare with you</p>
             </div>
             <Button variant="secondary" onClick={() => setShowUsernameModal(true)}>
               Change
@@ -168,7 +173,10 @@ export const Compare = () => {
 
       {/* Search and Compare */}
       <Card>
-        <h2 className="text-xl font-bold mb-4">🔍 Find a Friend</h2>
+        <div className="flex items-center gap-2 mb-4">
+          <Search className="w-5 h-5 text-primary" />
+          <h2 className="text-xl font-bold">Find a Friend</h2>
+        </div>
         <div className="relative">
           <Input
             placeholder="Search by username or name..."
@@ -181,21 +189,21 @@ export const Compare = () => {
           
           {/* Search Results Dropdown */}
           {searchResults.length > 0 && (
-            <div className="absolute z-10 w-full mt-2 bg-white border-2 border-gray-200 rounded-lg shadow-lg max-h-64 overflow-y-auto">
+            <div className="absolute z-10 w-full mt-2 bg-white border-2 border-border rounded-lg shadow-lg max-h-64 overflow-y-auto">
               {searchResults.map(user => (
                 <button
                   key={user.id}
                   onClick={() => handleCompare(user.username)}
-                  className="w-full text-left px-4 py-3 hover:bg-gray-50 border-b last:border-b-0 transition-colors"
+                  className="w-full text-left px-4 py-3 hover:bg-bg-primary border-b border-border last:border-b-0 transition-colors"
                 >
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="font-bold">{user.name}</p>
-                      <p className="text-sm text-gray-600">@{user.username}</p>
+                      <p className="font-bold text-text-primary">{user.name}</p>
+                      <p className="text-sm text-text-secondary">@{user.username}</p>
                     </div>
                     <div className="text-right">
                       <p className="text-sm font-medium text-primary">{user.xp} XP</p>
-                      <p className="text-xs text-gray-500">{user.totalQuizzes} quizzes</p>
+                      <p className="text-xs text-text-secondary">{user.totalQuizzes} quizzes</p>
                     </div>
                   </div>
                 </button>
@@ -205,7 +213,7 @@ export const Compare = () => {
         </div>
 
         {searching && (
-          <p className="text-sm text-gray-500 mt-2">Searching...</p>
+          <p className="text-sm text-text-secondary mt-2">Searching...</p>
         )}
       </Card>
 
@@ -219,8 +227,11 @@ export const Compare = () => {
 
       {/* Error State */}
       {error && (
-        <Card className="bg-red-50 border-2 border-red-300">
-          <p className="text-red-800 font-medium">❌ {error}</p>
+        <Card className="bg-danger bg-opacity-10 border-2 border-danger">
+          <div className="flex items-center gap-2">
+            <AlertCircle className="w-5 h-5 text-danger flex-shrink-0" />
+            <p className="text-danger font-medium">{error}</p>
+          </div>
         </Card>
       )}
 
@@ -228,13 +239,13 @@ export const Compare = () => {
       {comparison && (
         <div className="space-y-6">
           {/* Header */}
-          <Card className="bg-gradient-to-r from-primary to-secondary text-white">
+          <Card className="bg-primary text-white">
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-2xl font-bold mb-1">{comparison.currentUser.name}</h3>
                 <p className="text-sm opacity-90">@{comparison.currentUser.username}</p>
               </div>
-              <div className="text-4xl">🆚</div>
+              <div className="text-3xl">VS</div>
               <div className="text-right">
                 <h3 className="text-2xl font-bold mb-1">{comparison.targetUser.name}</h3>
                 <p className="text-sm opacity-90">@{comparison.targetUser.username}</p>
@@ -246,34 +257,34 @@ export const Compare = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Current User Profile */}
             <div>
-              <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-200">
+              <Card className="bg-bg-primary border-2 border-border">
                 <div className="text-center mb-4">
-                  <div className="w-16 h-16 bg-gradient-to-br from-primary to-blue-600 rounded-full flex items-center justify-center text-white text-3xl mx-auto mb-3">
-                    👤
+                  <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center text-white text-2xl mx-auto mb-3">
+                    <User className="w-8 h-8" />
                   </div>
-                  <h3 className="text-xl font-bold">{comparison.currentUser.name}</h3>
-                  <p className="text-sm text-gray-600">@{comparison.currentUser.username}</p>
+                  <h3 className="text-xl font-bold text-text-primary">{comparison.currentUser.name}</h3>
+                  <p className="text-sm text-text-secondary">@{comparison.currentUser.username}</p>
                 </div>
-                <div className="space-y-3 border-t border-blue-200 pt-4">
+                <div className="space-y-3 border-t border-border pt-4">
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-700">Total XP</span>
+                    <span className="text-text-primary">Total XP</span>
                     <span className="font-bold text-primary">{comparison.currentUser.stats.xp}</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-700">Accuracy</span>
-                    <span className="font-bold text-green-600">{Math.round(comparison.currentUser.stats.averageAccuracy)}%</span>
+                    <span className="text-text-primary">Accuracy</span>
+                    <span className="font-bold text-success">{Math.round(comparison.currentUser.stats.averageAccuracy)}%</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-700">Quizzes Taken</span>
-                    <span className="font-bold text-blue-600">{comparison.currentUser.stats.totalQuizzes}</span>
+                    <span className="text-text-primary">Quizzes Taken</span>
+                    <span className="font-bold text-primary">{comparison.currentUser.stats.totalQuizzes}</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-700">Current Streak</span>
-                    <span className="font-bold text-orange-600">{comparison.currentUser.stats.streak}</span>
+                    <span className="text-text-primary">Current Streak</span>
+                    <span className="font-bold text-warning">{comparison.currentUser.stats.streak}</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-700">Study Hours</span>
-                    <span className="font-bold text-purple-600">{comparison.currentUser.stats.totalStudyHours || 0}h</span>
+                    <span className="text-text-primary">Study Hours</span>
+                    <span className="font-bold text-primary">{comparison.currentUser.stats.totalStudyHours || 0}h</span>
                   </div>
                 </div>
               </Card>
@@ -281,34 +292,34 @@ export const Compare = () => {
 
             {/* Target User Profile */}
             <div>
-              <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200">
+              <Card className="bg-bg-primary border-2 border-border">
                 <div className="text-center mb-4">
-                  <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center text-white text-3xl mx-auto mb-3">
-                    👤
+                  <div className="w-16 h-16 bg-success rounded-full flex items-center justify-center text-white text-2xl mx-auto mb-3">
+                    <User className="w-8 h-8" />
                   </div>
-                  <h3 className="text-xl font-bold">{comparison.targetUser.name}</h3>
-                  <p className="text-sm text-gray-600">@{comparison.targetUser.username}</p>
+                  <h3 className="text-xl font-bold text-text-primary">{comparison.targetUser.name}</h3>
+                  <p className="text-sm text-text-secondary">@{comparison.targetUser.username}</p>
                 </div>
-                <div className="space-y-3 border-t border-green-200 pt-4">
+                <div className="space-y-3 border-t border-border pt-4">
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-700">Total XP</span>
-                    <span className="font-bold text-green-600">{comparison.targetUser.stats.xp}</span>
+                    <span className="text-text-primary">Total XP</span>
+                    <span className="font-bold text-success">{comparison.targetUser.stats.xp}</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-700">Accuracy</span>
-                    <span className="font-bold text-green-600">{Math.round(comparison.targetUser.stats.averageAccuracy)}%</span>
+                    <span className="text-text-primary">Accuracy</span>
+                    <span className="font-bold text-success">{Math.round(comparison.targetUser.stats.averageAccuracy)}%</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-700">Quizzes Taken</span>
-                    <span className="font-bold text-blue-600">{comparison.targetUser.stats.totalQuizzes}</span>
+                    <span className="text-text-primary">Quizzes Taken</span>
+                    <span className="font-bold text-primary">{comparison.targetUser.stats.totalQuizzes}</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-700">Current Streak</span>
-                    <span className="font-bold text-orange-600">{comparison.targetUser.stats.streak}</span>
+                    <span className="text-text-primary">Current Streak</span>
+                    <span className="font-bold text-warning">{comparison.targetUser.stats.streak}</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-700">Study Hours</span>
-                    <span className="font-bold text-purple-600">{comparison.targetUser.stats.totalStudyHours || 0}h</span>
+                    <span className="text-text-primary">Study Hours</span>
+                    <span className="font-bold text-primary">{comparison.targetUser.stats.totalStudyHours || 0}h</span>
                   </div>
                 </div>
               </Card>
@@ -334,7 +345,10 @@ export const Compare = () => {
           {/* Progress Trend Comparison */}
           {getMergedTrendData().length > 0 && (
             <Card>
-              <h2 className="text-xl font-bold mb-4">📈 Progress Over Time</h2>
+              <div className="flex items-center gap-2 mb-4">
+                <TrendingUp className="w-5 h-5 text-primary" />
+                <h2 className="text-xl font-bold">Progress Over Time</h2>
+              </div>
               <ResponsiveContainer width="100%" height={300}>
                 <LineChart data={getMergedTrendData()}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -345,7 +359,7 @@ export const Compare = () => {
                   <Line 
                     type="monotone" 
                     dataKey="you" 
-                    stroke="#6366F1" 
+                    stroke="#2c3e50" 
                     name="You"
                     strokeWidth={2}
                   />
@@ -364,7 +378,10 @@ export const Compare = () => {
           {/* Study Hours Comparison */}
           {getStudyHoursData().length > 0 && (
             <Card>
-              <h2 className="text-xl font-bold mb-4">⏱️ Study Hours Comparison</h2>
+              <div className="flex items-center gap-2 mb-4">
+                <Clock className="w-5 h-5 text-primary" />
+                <h2 className="text-xl font-bold">Study Hours Comparison</h2>
+              </div>
               <ResponsiveContainer width="100%" height={300}>
                 <LineChart data={getStudyHoursData()}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -375,31 +392,31 @@ export const Compare = () => {
                   <Line 
                     type="monotone" 
                     dataKey="you" 
-                    stroke="#9333EA" 
+                    stroke="#2c3e50" 
                     name="Your Study Hours"
                     strokeWidth={2}
                   />
                   <Line 
                     type="monotone" 
                     dataKey="friend" 
-                    stroke="#F59E0B" 
+                    stroke="#27ae60" 
                     name={`${comparison.targetUser.name}'s Study Hours`}
                     strokeWidth={2}
                   />
                 </LineChart>
               </ResponsiveContainer>
               <div className="mt-4 grid grid-cols-2 gap-4">
-                <div className="bg-purple-50 rounded-lg p-3 text-center">
-                  <p className="text-2xl font-bold text-purple-600">
+                <div className="bg-bg-primary rounded-lg p-3 text-center border-2 border-border">
+                  <p className="text-2xl font-bold text-primary">
                     {comparison.currentUser.stats.totalStudyHours || 0}h
                   </p>
-                  <p className="text-xs text-gray-600">Your Total Study Time</p>
+                  <p className="text-xs text-text-secondary">Your Total Study Time</p>
                 </div>
-                <div className="bg-orange-50 rounded-lg p-3 text-center">
-                  <p className="text-2xl font-bold text-orange-600">
+                <div className="bg-bg-primary rounded-lg p-3 text-center border-2 border-border">
+                  <p className="text-2xl font-bold text-success">
                     {comparison.targetUser.stats.totalStudyHours || 0}h
                   </p>
-                  <p className="text-xs text-gray-600">{comparison.targetUser.name}'s Total</p>
+                  <p className="text-xs text-text-secondary">{comparison.targetUser.name}'s Total</p>
                 </div>
               </div>
             </Card>
@@ -408,7 +425,10 @@ export const Compare = () => {
           {/* Topic Comparison */}
           {comparison.topicComparison.length > 0 && (
             <Card>
-              <h2 className="text-xl font-bold mb-4">📚 Topic-wise Comparison</h2>
+              <div className="flex items-center gap-2 mb-4">
+                <BarChart3 className="w-5 h-5 text-primary" />
+                <h2 className="text-xl font-bold">Topic-wise Comparison</h2>
+              </div>
               <ResponsiveContainer width="100%" height={400}>
                 <BarChart data={comparison.topicComparison.slice(0, 10)}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -416,7 +436,7 @@ export const Compare = () => {
                   <YAxis />
                   <Tooltip />
                   <Legend />
-                  <Bar dataKey="user1Accuracy" fill="#6366F1" name="You" />
+                  <Bar dataKey="user1Accuracy" fill="#2c3e50" name="You" />
                   <Bar dataKey="user2Accuracy" fill="#10B981" name={comparison.targetUser.name} />
                 </BarChart>
               </ResponsiveContainer>

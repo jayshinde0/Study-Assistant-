@@ -8,14 +8,14 @@ export const SuggestedQuestions = ({ questions, onQuestionClick, loading }) => {
 
   return (
     <motion.div
-      className="bg-gradient-to-r from-blue-50 to-teal-50 border border-blue-200 rounded-xl p-6 mb-6"
+      className="bg-bg-primary border border-border rounded-xl p-6 mb-6"
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
     >
       <div className="flex items-center gap-2 mb-4">
-        <Lightbulb className="w-5 h-5 text-blue-600" />
-        <h3 className="font-semibold text-gray-900">Suggested Questions</h3>
+        <Lightbulb className="w-5 h-5 text-primary" />
+        <h3 className="font-semibold text-text-primary">Suggested Questions</h3>
       </div>
 
       <div className="space-y-2">
@@ -26,13 +26,13 @@ export const SuggestedQuestions = ({ questions, onQuestionClick, loading }) => {
             disabled={loading}
             whileHover={{ x: 4 }}
             whileTap={{ scale: 0.98 }}
-            className="w-full text-left px-4 py-3 bg-white border border-blue-200 rounded-lg hover:border-blue-400 hover:shadow-md transition-all disabled:opacity-50 disabled:cursor-not-allowed group"
+            className="w-full text-left px-4 py-3 bg-white border border-border rounded-lg hover:border-primary hover:shadow-md transition-all disabled:opacity-50 disabled:cursor-not-allowed group"
           >
             <div className="flex items-center justify-between">
-              <p className="text-sm text-gray-700 group-hover:text-blue-700 transition-colors">
+              <p className="text-sm text-text-primary group-hover:text-primary transition-colors">
                 {question}
               </p>
-              <ArrowRight className="w-4 h-4 text-blue-600 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <ArrowRight className="w-4 h-4 text-primary opacity-0 group-hover:opacity-100 transition-opacity" />
             </div>
           </motion.button>
         ))}

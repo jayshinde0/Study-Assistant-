@@ -51,7 +51,7 @@ export const ChatInput = ({ onSendMessage, loading, disabled }) => {
             placeholder="Ask me anything about your study materials... (Shift+Enter for new line)"
             disabled={loading || disabled}
             rows={rows}
-            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all resize-none disabled:bg-gray-50 disabled:text-gray-500"
+            className="w-full px-4 py-3 border-2 border-border rounded-xl focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary focus:ring-opacity-20 transition-all resize-none disabled:bg-bg-primary disabled:text-text-secondary"
           />
           <div className="absolute bottom-3 right-3 text-xs text-gray-400">
             {message.length}/1000
@@ -63,7 +63,7 @@ export const ChatInput = ({ onSendMessage, loading, disabled }) => {
           disabled={loading || disabled || !message.trim()}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          className="flex-shrink-0 w-12 h-12 bg-gradient-to-r from-blue-600 to-teal-600 text-white rounded-xl flex items-center justify-center hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex-shrink-0 w-12 h-12 bg-primary text-white rounded-xl flex items-center justify-center hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {loading ? (
             <Loader className="w-5 h-5 animate-spin" />

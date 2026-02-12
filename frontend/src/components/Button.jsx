@@ -8,19 +8,20 @@ export const Button = ({
   ...props 
 }) => {
   const variants = {
-    primary: 'bg-gradient-to-r from-primary to-blue-600 text-white hover:from-primary hover:to-blue-700 shadow-md hover:shadow-lg',
-    secondary: 'bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-300'
+    primary: 'bg-primary text-white hover:bg-opacity-90 transition-all duration-150',
+    secondary: 'bg-white text-text-primary border border-border hover:bg-gray-50 transition-all duration-150',
+    tertiary: 'bg-transparent text-text-primary border border-border hover:bg-gray-50 transition-all duration-150'
   };
 
   return (
     <motion.button
-      className={`px-6 py-3 rounded-lg font-semibold transition-all duration-200 ${variants[variant]} ${className} ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
-      whileHover={{ scale: 1.02 }}
+      className={`px-4 py-2 rounded-md font-medium text-sm transition-all duration-150 ${variants[variant]} ${className} ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+      whileHover={{ opacity: 0.95 }}
       whileTap={{ scale: 0.98 }}
       disabled={loading}
       {...props}
     >
-      {loading ? '⏳ Loading...' : children}
+      {loading ? 'Loading...' : children}
     </motion.button>
   );
 };

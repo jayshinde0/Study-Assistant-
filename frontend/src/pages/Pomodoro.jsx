@@ -4,6 +4,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { Card } from '../components/Card';
 import { Button } from '../components/Button';
 import client from '../api/client';
+import { Clock, Coffee, RotateCcw, Play, Pause } from 'lucide-react';
 
 export const Pomodoro = () => {
   const [topics, setTopics] = useState([]);
@@ -111,18 +112,19 @@ export const Pomodoro = () => {
   return (
     <div className="space-y-8">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-2">
-          ⏱️ Pomodoro Timer
-        </h1>
-        <p className="text-gray-600">Stay focused and track your study time</p>
+        <div className="flex items-center gap-3 mb-2">
+          <Clock className="w-8 h-8 text-primary" />
+          <h1 className="text-4xl font-bold text-text-primary">Pomodoro Timer</h1>
+        </div>
+        <p className="text-text-secondary">Stay focused and track your study time</p>
       </motion.div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div className="space-y-6">
-          <Card className="bg-gradient-to-br from-blue-50 to-indigo-50">
+          <Card className="bg-bg-primary">
             <div className="text-center mb-6">
-              <p className="text-sm font-medium text-gray-600 mb-2">
-                {isBreak ? '☕ Break Time' : '📚 Focus Time'}
+              <p className="text-sm font-medium text-text-secondary mb-2">
+                {isBreak ? 'Break Time' : 'Focus Time'}
               </p>
               <motion.div
                 className="text-7xl font-bold text-primary mb-4"
@@ -131,7 +133,7 @@ export const Pomodoro = () => {
               >
                 {formatTime(timeLeft)}
               </motion.div>
-              <div className="w-full bg-gray-200 rounded-full h-3 mb-4">
+              <div className="w-full bg-border rounded-full h-3 mb-4">
                 <div
                   className="bg-primary h-3 rounded-full transition-all"
                   style={{ width: `${progress}%` }}
@@ -142,13 +144,13 @@ export const Pomodoro = () => {
             {!isRunning && !currentSession && (
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Select Topic <span className="text-gray-500 text-xs">(Optional)</span>
+                  <label className="block text-sm font-medium text-text-primary mb-2">
+                    Select Topic <span className="text-text-secondary text-xs">(Optional)</span>
                   </label>
                   <select
                     value={selectedTopic}
                     onChange={(e) => setSelectedTopic(e.target.value)}
-                    className="w-full p-3 border-2 border-gray-200 rounded-lg focus:border-primary focus:outline-none"
+                    className="w-full p-3 border-2 border-border rounded-lg focus:border-primary focus:outline-none"
                   >
                     <option value="">General Study</option>
                     {topics.map(topic => (
@@ -159,19 +161,19 @@ export const Pomodoro = () => {
                 <div className="flex gap-2">
                   <button
                     onClick={() => { setDuration(25); setTimeLeft(25 * 60); setIsBreak(false); }}
-                    className={`flex-1 py-2 rounded-lg font-medium ${duration === 25 && !isBreak ? 'bg-primary text-white' : 'bg-gray-200'}`}
+                    className={`flex-1 py-2 rounded-lg font-medium transition-colors ${duration === 25 && !isBreak ? 'bg-primary text-white' : 'bg-border text-text-primary hover:bg-border hover:bg-opacity-75'}`}
                   >
                     25 min
                   </button>
                   <button
                     onClick={() => { setDuration(15); setTimeLeft(15 * 60); setIsBreak(false); }}
-                    className={`flex-1 py-2 rounded-lg font-medium ${duration === 15 && !isBreak ? 'bg-primary text-white' : 'bg-gray-200'}`}
+                    className={`flex-1 py-2 rounded-lg font-medium transition-colors ${duration === 15 && !isBreak ? 'bg-primary text-white' : 'bg-border text-text-primary hover:bg-border hover:bg-opacity-75'}`}
                   >
                     15 min
                   </button>
                   <button
                     onClick={() => { setDuration(5); setTimeLeft(5 * 60); setIsBreak(true); }}
-                    className={`flex-1 py-2 rounded-lg font-medium ${duration === 5 && isBreak ? 'bg-primary text-white' : 'bg-gray-200'}`}
+                    className={`flex-1 py-2 rounded-lg font-medium transition-colors ${duration === 5 && isBreak ? 'bg-primary text-white' : 'bg-border text-text-primary hover:bg-border hover:bg-opacity-75'}`}
                   >
                     5 min
                   </button>
@@ -189,10 +191,21 @@ export const Pomodoro = () => {
                   variant={isRunning ? 'secondary' : 'primary'}
                   className="flex-1"
                 >
-                  {isRunning ? '⏸️ Pause' : '▶️ Resume'}
+                  {isRunning ? (
+                    <>
+                      <Pause className="w-4 h-4 mr-2 inline" />
+                      Pause
+                    </>
+                  ) : (
+                    <>
+                      <Play className="w-4 h-4 mr-2 inline" />
+                      Resume
+                    </>
+                  )}
                 </Button>
                 <Button onClick={resetTimer} variant="secondary">
-                  🔄 Reset
+                  <RotateCcw className="w-4 h-4 mr-2 inline" />
+                  Reset
                 </Button>
               </div>
             )}
@@ -200,24 +213,24 @@ export const Pomodoro = () => {
 
           {todayStats && (
             <Card>
-              <h3 className="text-xl font-bold mb-4">📊 Today's Progress</h3>
+              <h3 className="text-xl font-bold mb-4">Today's Progress</h3>
               <div className="grid grid-cols-2 gap-4 mb-4">
-                <div className="bg-blue-50 rounded-lg p-4 text-center">
-                  <p className="text-3xl font-bold text-blue-600">{todayStats.totalMinutes}</p>
-                  <p className="text-sm text-gray-600">Minutes</p>
+                <div className="bg-bg-primary rounded-lg p-4 text-center border-2 border-border">
+                  <p className="text-3xl font-bold text-primary">{todayStats.totalMinutes}</p>
+                  <p className="text-sm text-text-secondary">Minutes</p>
                 </div>
-                <div className="bg-green-50 rounded-lg p-4 text-center">
-                  <p className="text-3xl font-bold text-green-600">{todayStats.sessionsCompleted}</p>
-                  <p className="text-sm text-gray-600">Sessions</p>
+                <div className="bg-bg-primary rounded-lg p-4 text-center border-2 border-border">
+                  <p className="text-3xl font-bold text-success">{todayStats.sessionsCompleted}</p>
+                  <p className="text-sm text-text-secondary">Sessions</p>
                 </div>
               </div>
               {todayStats.byTopic && todayStats.byTopic.length > 0 && (
                 <div>
-                  <p className="text-sm font-medium text-gray-600 mb-2">By Topic:</p>
+                  <p className="text-sm font-medium text-text-secondary mb-2">By Topic:</p>
                   {todayStats.byTopic.map(item => (
-                    <div key={item.topic} className="flex justify-between items-center py-2 border-b">
+                    <div key={item.topic} className="flex justify-between items-center py-2 border-b border-border">
                       <span className="font-medium">{item.topic}</span>
-                      <span className="text-sm text-gray-600">{item.minutes} min</span>
+                      <span className="text-sm text-text-secondary">{item.minutes} min</span>
                     </div>
                   ))}
                 </div>
@@ -229,24 +242,24 @@ export const Pomodoro = () => {
         <div className="space-y-6">
           {weeklyStats && weeklyStats.dailyData && (
             <Card>
-              <h3 className="text-xl font-bold mb-4">📈 Weekly Progress</h3>
+              <h3 className="text-xl font-bold mb-4">Weekly Progress</h3>
               <ResponsiveContainer width="100%" height={250}>
                 <BarChart data={weeklyStats.dailyData}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="date" tickFormatter={(date) => new Date(date).toLocaleDateString('en-US', { weekday: 'short' })} />
                   <YAxis />
                   <Tooltip />
-                  <Bar dataKey="minutes" fill="#6366F1" />
+                  <Bar dataKey="minutes" fill="#2c3e50" />
                 </BarChart>
               </ResponsiveContainer>
               <div className="mt-4 grid grid-cols-2 gap-4">
-                <div className="bg-purple-50 rounded-lg p-3 text-center">
-                  <p className="text-2xl font-bold text-purple-600">{weeklyStats.totalMinutes}</p>
-                  <p className="text-xs text-gray-600">Total Minutes</p>
+                <div className="bg-bg-primary rounded-lg p-3 text-center border-2 border-border">
+                  <p className="text-2xl font-bold text-primary">{weeklyStats.totalMinutes}</p>
+                  <p className="text-xs text-text-secondary">Total Minutes</p>
                 </div>
-                <div className="bg-orange-50 rounded-lg p-3 text-center">
-                  <p className="text-2xl font-bold text-orange-600">{weeklyStats.sessionsCompleted}</p>
-                  <p className="text-xs text-gray-600">Total Sessions</p>
+                <div className="bg-bg-primary rounded-lg p-3 text-center border-2 border-border">
+                  <p className="text-2xl font-bold text-primary">{weeklyStats.sessionsCompleted}</p>
+                  <p className="text-xs text-text-secondary">Total Sessions</p>
                 </div>
               </div>
             </Card>
@@ -254,7 +267,7 @@ export const Pomodoro = () => {
 
           {weeklyStats && weeklyStats.byTopic && weeklyStats.byTopic.length > 0 && (
             <Card>
-              <h3 className="text-xl font-bold mb-4">📚 Top Topics This Week</h3>
+              <h3 className="text-xl font-bold mb-4">Top Topics This Week</h3>
               <div className="space-y-3">
                 {weeklyStats.byTopic.slice(0, 5).map((item, idx) => (
                   <div key={item.topic} className="flex items-center gap-3">
@@ -263,11 +276,11 @@ export const Pomodoro = () => {
                     </div>
                     <div className="flex-1">
                       <p className="font-medium">{item.topic}</p>
-                      <p className="text-sm text-gray-600">{item.sessions} sessions</p>
+                      <p className="text-sm text-text-secondary">{item.sessions} sessions</p>
                     </div>
                     <div className="text-right">
                       <p className="font-bold text-primary">{item.minutes}</p>
-                      <p className="text-xs text-gray-600">minutes</p>
+                      <p className="text-xs text-text-secondary">minutes</p>
                     </div>
                   </div>
                 ))}

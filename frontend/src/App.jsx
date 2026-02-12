@@ -15,6 +15,9 @@ import { Compare } from './pages/Compare';
 import { Flashcards } from './pages/Flashcards';
 import { Pomodoro } from './pages/Pomodoro';
 import { Profile } from './pages/Profile';
+import { 
+  BookOpen, BarChart3, Layers, Clock, Map, TrendingUp, Users, MessageCircle, User, LogOut, Home as HomeIcon
+} from 'lucide-react';
 import client from './api/client';
 
 const ProtectedRoute = ({ children }) => {
@@ -27,95 +30,64 @@ const Layout = ({ children }) => {
   const logout = useAuthStore((state) => state.logout);
   const navigate = useNavigate();
 
+  const navItems = [
+    { icon: BarChart3, label: 'Dashboard', path: '/dashboard' },
+    { icon: Layers, label: 'Content', path: '/content' },
+    { icon: Layers, label: 'Flashcards', path: '/flashcards' },
+    { icon: Clock, label: 'Pomodoro', path: '/pomodoro' },
+    { icon: Map, label: 'Learning Path', path: '/learning-path' },
+    { icon: TrendingUp, label: 'Analytics', path: '/analytics' },
+    { icon: Users, label: 'Compare', path: '/compare' },
+    { icon: MessageCircle, label: 'Chat with AI', path: '/chatbot' },
+    { icon: User, label: 'My Profile', path: `/profile/${user?.username}` }
+  ];
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex">
+    <div className="min-h-screen bg-bg-primary flex">
       {/* Sidebar */}
-      <aside className="w-64 bg-white shadow-xl border-r border-slate-200 flex flex-col fixed h-screen">
+      <aside className="w-64 bg-white border-r border-border flex flex-col fixed h-screen">
         {/* Logo Section */}
-        <div className="p-6 border-b border-slate-200">
-          <div className="flex items-center gap-2 mb-2">
-            <div className="w-10 h-10 bg-gradient-to-br from-primary to-blue-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-lg">📚</span>
+        <div className="p-6 border-b border-border">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
+              <BookOpen className="w-6 h-6 text-white" />
             </div>
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
-              Study
-            </h1>
+            <div>
+              <h1 className="text-lg font-bold text-text-primary">Study</h1>
+              <p className="text-xs text-text-secondary">Learning Platform</p>
+            </div>
           </div>
-          <p className="text-xs text-gray-500 ml-12">Smart Learning Platform</p>
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
-          <button
-            onClick={() => navigate('/dashboard')}
-            className="w-full text-left px-4 py-3 rounded-lg hover:bg-gradient-to-r hover:from-primary hover:to-blue-600 hover:text-white transition-all duration-200 font-medium text-gray-700 hover:shadow-md"
-          >
-            📊 Dashboard
-          </button>
+        <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
+          {navItems.map((item) => (
             <button
-            onClick={() => navigate('/content')}
-            className="w-full text-left px-4 py-3 rounded-lg hover:bg-gradient-to-r hover:from-primary hover:to-blue-600 hover:text-white transition-all duration-200 font-medium text-gray-700 hover:shadow-md"
-          >
-            📚 Content
-          </button>
-          <button
-            onClick={() => navigate('/flashcards')}
-            className="w-full text-left px-4 py-3 rounded-lg hover:bg-gradient-to-r hover:from-primary hover:to-blue-600 hover:text-white transition-all duration-200 font-medium text-gray-700 hover:shadow-md"
-          >
-            🎴 Flashcards
-          </button>
-          <button
-            onClick={() => navigate('/pomodoro')}
-            className="w-full text-left px-4 py-3 rounded-lg hover:bg-gradient-to-r hover:from-primary hover:to-blue-600 hover:text-white transition-all duration-200 font-medium text-gray-700 hover:shadow-md"
-          >
-            ⏱️ Pomodoro
-          </button>
-          <button
-            onClick={() => navigate('/learning-path')}
-            className="w-full text-left px-4 py-3 rounded-lg hover:bg-gradient-to-r hover:from-primary hover:to-blue-600 hover:text-white transition-all duration-200 font-medium text-gray-700 hover:shadow-md"
-          >
-            🗺️ Learning Path
-          </button>
-          <button
-            onClick={() => navigate('/analytics')}
-            className="w-full text-left px-4 py-3 rounded-lg hover:bg-gradient-to-r hover:from-primary hover:to-blue-600 hover:text-white transition-all duration-200 font-medium text-gray-700 hover:shadow-md"
-          >
-            📈 Analytics
-          </button>
-          <button
-            onClick={() => navigate('/compare')}
-            className="w-full text-left px-4 py-3 rounded-lg hover:bg-gradient-to-r hover:from-primary hover:to-blue-600 hover:text-white transition-all duration-200 font-medium text-gray-700 hover:shadow-md"
-          >
-            👥 Compare
-          </button>
-          <button
-            onClick={() => navigate('/chatbot')}
-            className="w-full text-left px-4 py-3 rounded-lg hover:bg-gradient-to-r hover:from-primary hover:to-blue-600 hover:text-white transition-all duration-200 font-medium text-gray-700 hover:shadow-md"
-          >
-            💬 Chat with AI
-          </button>
-          <button
-            onClick={() => navigate(`/profile/${user?.username}`)}
-            className="w-full text-left px-4 py-3 rounded-lg hover:bg-gradient-to-r hover:from-primary hover:to-blue-600 hover:text-white transition-all duration-200 font-medium text-gray-700 hover:shadow-md"
-          >
-            👤 My Profile
-          </button>
+              key={item.path}
+              onClick={() => navigate(item.path)}
+              className="w-full text-left px-4 py-3 rounded-lg hover:bg-bg-primary transition-colors duration-150 font-medium text-text-secondary hover:text-text-primary flex items-center gap-3"
+            >
+              <item.icon className="w-5 h-5" />
+              {item.label}
+            </button>
+          ))}
         </nav>
 
         {/* User Section - Fixed at bottom */}
-        <div className="border-t border-slate-200 p-4 space-y-3">
-          <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-3">
-            <p className="text-xs text-gray-600 font-semibold uppercase tracking-wide">Logged in as</p>
-            <p className="font-bold text-gray-900 truncate">{user?.name}</p>
+        <div className="border-t border-border p-4 space-y-3">
+          <div className="bg-bg-primary rounded-lg p-3">
+            <p className="text-xs text-text-secondary font-semibold uppercase tracking-wide">Logged in as</p>
+            <p className="font-semibold text-text-primary truncate">{user?.name}</p>
           </div>
           <button
             onClick={() => {
               logout();
               navigate('/login');
             }}
-            className="w-full px-4 py-2 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg hover:from-red-600 hover:to-red-700 transition-all duration-200 font-medium shadow-md hover:shadow-lg"
+            className="w-full px-4 py-2 bg-danger text-black rounded-lg hover:bg-opacity-90 transition-all duration-150 font-medium flex items-center justify-center gap-2"
           >
-            🚪 Logout
+            <LogOut className="w-4 h-4" />
+            Logout
           </button>
         </div>
       </aside>
@@ -123,25 +95,25 @@ const Layout = ({ children }) => {
       {/* Main Content */}
       <div className="flex-1 flex flex-col ml-64">
         {/* Top Navigation */}
-        <nav className="bg-white shadow-sm border-b border-slate-200 sticky top-0 z-40">
+        <nav className="bg-white border-b border-border sticky top-0 z-40">
           <div className="px-8 py-4 flex justify-between items-center gap-6">
-            <h2 className="text-2xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent whitespace-nowrap">
+            <h2 className="text-2xl font-bold text-text-primary whitespace-nowrap">
               Welcome to Study Assistant
             </h2>
             <div className="flex-1 max-w-md">
               <SearchBar />
             </div>
             <div className="flex items-center gap-3 flex-shrink-0">
-              <div className="w-10 h-10 bg-gradient-to-br from-primary to-blue-600 rounded-full flex items-center justify-center text-white font-bold">
+              <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white font-bold">
                 {user?.name?.charAt(0).toUpperCase()}
               </div>
-              <span className="text-gray-700 font-medium">{user?.name}</span>
+              <span className="text-text-primary font-medium">{user?.name}</span>
             </div>
           </div>
         </nav>
 
         {/* Main Content Area */}
-        <main className="flex-1 p-8 overflow-auto bg-gradient-to-br from-slate-50 to-slate-100">
+        <main className="flex-1 p-8 overflow-auto">
           {children}
         </main>
       </div>

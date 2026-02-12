@@ -3,6 +3,7 @@ import { motion, useMotionValue, useTransform } from 'framer-motion';
 import { Card } from '../components/Card';
 import { Button } from '../components/Button';
 import client from '../api/client';
+import { Layers, Download, FileText, Play, Trash2, CheckCircle, XCircle } from 'lucide-react';
 
 export const Flashcards = () => {
   const [contents, setContents] = useState([]);
@@ -167,10 +168,11 @@ export const Flashcards = () => {
   return (
     <div className="space-y-8">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-2">
-          🎴 Flashcards
-        </h1>
-        <p className="text-gray-600">Quick revision with spaced repetition</p>
+        <div className="flex items-center gap-3 mb-2">
+          <Layers className="w-8 h-8 text-primary" />
+          <h1 className="text-4xl font-bold text-text-primary">Flashcards</h1>
+        </div>
+        <p className="text-text-secondary">Quick revision with spaced repetition</p>
       </motion.div>
 
       {/* Stats */}
@@ -178,23 +180,23 @@ export const Flashcards = () => {
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
           <Card className="text-center">
             <p className="text-2xl font-bold text-primary">{stats.total}</p>
-            <p className="text-xs text-gray-600">Total Cards</p>
+            <p className="text-xs text-text-secondary">Total Cards</p>
           </Card>
-          <Card className="text-center bg-green-50">
-            <p className="text-2xl font-bold text-green-600">{stats.mastered}</p>
-            <p className="text-xs text-gray-600">Mastered</p>
+          <Card className="text-center">
+            <p className="text-2xl font-bold text-success">{stats.mastered}</p>
+            <p className="text-xs text-text-secondary">Mastered</p>
           </Card>
-          <Card className="text-center bg-blue-50">
-            <p className="text-2xl font-bold text-blue-600">{stats.learning}</p>
-            <p className="text-xs text-gray-600">Learning</p>
+          <Card className="text-center">
+            <p className="text-2xl font-bold text-primary">{stats.learning}</p>
+            <p className="text-xs text-text-secondary">Learning</p>
           </Card>
-          <Card className="text-center bg-yellow-50">
-            <p className="text-2xl font-bold text-yellow-600">{stats.new}</p>
-            <p className="text-xs text-gray-600">New</p>
+          <Card className="text-center">
+            <p className="text-2xl font-bold text-warning">{stats.new}</p>
+            <p className="text-xs text-text-secondary">New</p>
           </Card>
-          <Card className="text-center bg-red-50">
-            <p className="text-2xl font-bold text-red-600">{stats.dueForReview}</p>
-            <p className="text-xs text-gray-600">Due Today</p>
+          <Card className="text-center">
+            <p className="text-2xl font-bold text-danger">{stats.dueForReview}</p>
+            <p className="text-xs text-text-secondary">Due Today</p>
           </Card>
         </div>
       )}
@@ -205,7 +207,8 @@ export const Flashcards = () => {
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-2xl font-bold">Select Content</h2>
             <Button variant="secondary" onClick={exportToAnki}>
-              📥 Export to Anki
+              <Download className="w-4 h-4 mr-2 inline" />
+              Export to Anki
             </Button>
           </div>
 
@@ -216,7 +219,7 @@ export const Flashcards = () => {
               placeholder="Search flashcards by content title or topic..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-primary focus:outline-none transition-colors"
+              className="w-full px-4 py-2 border-2 border-border rounded-lg focus:border-primary focus:outline-none transition-colors"
             />
           </div>
 
@@ -238,15 +241,18 @@ export const Flashcards = () => {
                   return (
                     <Card key={content._id} className="hover:shadow-lg transition-all">
                       <div className="flex items-center gap-3 mb-4">
-                        <span className="text-3xl">
-                          {content.type === 'pdf' ? '📄' : content.type === 'youtube' ? '🎥' : '📝'}
-                        </span>
+                        <div className="text-primary">
+                          {content.type === 'pdf' && <FileText className="w-8 h-8" />}
+                          {content.type === 'youtube' && <Play className="w-8 h-8" />}
+                          {content.type === 'text' && <Layers className="w-8 h-8" />}
+                        </div>
                         <div className="flex-1">
                           <h3 className="font-bold line-clamp-2">{content.title}</h3>
-                          <p className="text-xs text-gray-500 capitalize">{content.type}</p>
+                          <p className="text-xs text-text-secondary capitalize">{content.type}</p>
                           {hasFlashcards && (
-                            <p className="text-xs text-green-600 font-medium mt-1">
-                              ✅ {flashcardCount} flashcards
+                            <p className="text-xs text-success font-medium mt-1">
+                              <CheckCircle className="w-3 h-3 inline mr-1" />
+                              {flashcardCount} flashcards
                             </p>
                           )}
                         </div>
@@ -260,7 +266,17 @@ export const Flashcards = () => {
                           }}
                           loading={loading}
                         >
-                          {hasFlashcards ? '📚 Study' : '✨ Generate'}
+                          {hasFlashcards ? (
+                            <>
+                              <Play className="w-4 h-4 mr-2 inline" />
+                              Study
+                            </>
+                          ) : (
+                            <>
+                              <Layers className="w-4 h-4 mr-2 inline" />
+                              Generate
+                            </>
+                          )}
                         </Button>
                         {hasFlashcards && (
                           <Button
@@ -268,7 +284,7 @@ export const Flashcards = () => {
                             className="px-3"
                             onClick={() => deleteFlashcards(content._id)}
                           >
-                            🗑️
+                            <Trash2 className="w-4 h-4" />
                           </Button>
                         )}
                       </div>
@@ -286,14 +302,14 @@ export const Flashcards = () => {
           {/* Progress */}
           <div className="mb-6">
             <div className="flex items-center justify-between mb-2">
-              <p className="text-sm font-medium text-gray-600">
+              <p className="text-sm font-medium text-text-secondary">
                 Card {currentIndex + 1} of {flashcards.length}
               </p>
               <Button variant="secondary" size="sm" onClick={() => setMode('select')}>
-                ← Back
+                Back
               </Button>
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-2">
+            <div className="w-full bg-border rounded-full h-2">
               <div
                 className="bg-primary h-2 rounded-full transition-all"
                 style={{ width: `${((currentIndex + 1) / flashcards.length) * 100}%` }}
@@ -313,26 +329,26 @@ export const Flashcards = () => {
           >
             {/* Front - Question */}
             {!isFlipped && (
-              <Card className="absolute inset-0 flex items-center justify-center text-center p-8 bg-gradient-to-br from-blue-50 to-indigo-50">
+              <Card className="absolute inset-0 flex items-center justify-center text-center p-8 bg-bg-primary border-2 border-border">
                 <div>
-                  <p className="text-sm text-gray-500 mb-4">Question</p>
-                  <p className="text-2xl font-bold">{currentCard.front}</p>
-                  <p className="text-sm text-gray-400 mt-6">Tap to flip</p>
+                  <p className="text-sm text-text-secondary mb-4">Question</p>
+                  <p className="text-2xl font-bold text-text-primary">{currentCard.front}</p>
+                  <p className="text-sm text-text-secondary mt-6">Tap to flip</p>
                 </div>
               </Card>
             )}
 
             {/* Back - Answer */}
             {isFlipped && (
-              <Card className="absolute inset-0 flex items-center justify-center text-center p-8 bg-gradient-to-br from-green-50 to-emerald-50">
+              <Card className="absolute inset-0 flex items-center justify-center text-center p-8 bg-bg-primary border-2 border-border">
                 <div>
-                  <p className="text-sm text-gray-500 mb-4">Answer</p>
-                  <p className="text-xl">{currentCard.back}</p>
+                  <p className="text-sm text-text-secondary mb-4">Answer</p>
+                  <p className="text-xl text-text-primary">{currentCard.back}</p>
                   <div className="mt-6 flex items-center justify-center gap-2">
-                    <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">
+                    <span className="px-3 py-1 bg-primary bg-opacity-10 text-primary rounded-full text-xs border border-primary">
                       {currentCard.topic}
                     </span>
-                    <span className="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-xs">
+                    <span className="px-3 py-1 bg-primary bg-opacity-10 text-primary rounded-full text-xs border border-primary">
                       {currentCard.difficulty}
                     </span>
                   </div>
@@ -347,34 +363,36 @@ export const Flashcards = () => {
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               onClick={() => handleSwipe(false)}
-              className="flex items-center gap-2 px-6 py-3 bg-red-500 text-white rounded-lg font-medium shadow-lg"
+              className="flex items-center gap-2 px-6 py-3 bg-danger text-white rounded-lg font-medium shadow-lg"
             >
-              ❌ Don't Know
+              <XCircle className="w-4 h-4" />
+              Don't Know
             </motion.button>
 
-            <p className="text-sm text-gray-500">Swipe or tap buttons</p>
+            <p className="text-sm text-text-secondary">Swipe or tap buttons</p>
 
             <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               onClick={() => handleSwipe(true)}
-              className="flex items-center gap-2 px-6 py-3 bg-green-500 text-white rounded-lg font-medium shadow-lg"
+              className="flex items-center gap-2 px-6 py-3 bg-success text-white rounded-lg font-medium shadow-lg"
             >
-              ✅ Know It
+              <CheckCircle className="w-4 h-4" />
+              Know It
             </motion.button>
           </div>
 
           {/* Mastery Level */}
           <div className="mt-6 text-center">
-            <p className="text-sm text-gray-600 mb-2">Mastery Level</p>
+            <p className="text-sm text-text-secondary mb-2">Mastery Level</p>
             <div className="flex items-center justify-center gap-2">
               {[0, 1, 2, 3, 4, 5].map(level => (
                 <div
                   key={level}
                   className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${
                     level <= currentCard.masteryLevel
-                      ? 'bg-green-500 text-white'
-                      : 'bg-gray-200 text-gray-400'
+                      ? 'bg-success text-white'
+                      : 'bg-border text-text-secondary'
                   }`}
                 >
                   {level}
@@ -388,9 +406,11 @@ export const Flashcards = () => {
       {/* Complete Mode */}
       {mode === 'complete' && (
         <Card className="max-w-2xl mx-auto text-center py-12">
-          <div className="text-6xl mb-4">🎉</div>
-          <h2 className="text-3xl font-bold mb-4">Session Complete!</h2>
-          <p className="text-gray-600 mb-8">
+          <div className="mb-4">
+            <CheckCircle className="w-16 h-16 text-success mx-auto" />
+          </div>
+          <h2 className="text-3xl font-bold mb-4 text-text-primary">Session Complete!</h2>
+          <p className="text-text-secondary mb-8">
             You've reviewed {flashcards.length} flashcards
           </p>
           <div className="flex gap-4 justify-center">

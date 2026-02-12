@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { ExternalLink, Copy, Check } from 'lucide-react';
+import { ExternalLink, Copy, Check, BookOpen, Lightbulb } from 'lucide-react';
 import { useState } from 'react';
 
 export const ChatMessage = ({ message, isUser, sources, suggestedQuestions, onSuggestedClick }) => {
@@ -23,8 +23,8 @@ export const ChatMessage = ({ message, isUser, sources, suggestedQuestions, onSu
         <div
           className={`rounded-2xl px-6 py-4 ${
             isUser
-              ? 'bg-gradient-to-r from-blue-600 to-teal-600 text-white rounded-br-none'
-              : 'bg-white border border-gray-200 text-gray-900 rounded-bl-none shadow-md'
+              ? 'bg-primary text-white rounded-br-none'
+              : 'bg-white border border-border text-text-primary rounded-bl-none shadow-md'
           }`}
         >
           <p className="text-sm leading-relaxed whitespace-pre-wrap">{message}</p>
@@ -58,18 +58,21 @@ export const ChatMessage = ({ message, isUser, sources, suggestedQuestions, onSu
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
           >
-            <p className="text-xs font-semibold text-gray-600 uppercase">📚 Sources</p>
+            <p className="text-xs font-semibold text-text-secondary uppercase flex items-center gap-2">
+              <BookOpen className="w-4 h-4 text-primary" />
+              Sources
+            </p>
             <div className="flex flex-wrap gap-2">
               {sources.map((source, idx) => (
                 <div
                   key={idx}
-                  className="flex items-center gap-2 px-3 py-2 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 transition-colors cursor-pointer"
+                  className="flex items-center gap-2 px-3 py-2 bg-primary bg-opacity-10 border border-primary rounded-lg hover:bg-opacity-20 transition-colors cursor-pointer"
                 >
-                  <span className="text-xs font-medium text-blue-700">{source.title}</span>
-                  <span className="text-xs text-blue-600 font-semibold">
+                  <span className="text-xs font-medium text-primary">{source.title}</span>
+                  <span className="text-xs text-primary font-semibold">
                     {Math.round(source.relevanceScore * 100)}%
                   </span>
-                  <ExternalLink className="w-3 h-3 text-blue-600" />
+                  <ExternalLink className="w-3 h-3 text-primary" />
                 </div>
               ))}
             </div>
@@ -84,15 +87,18 @@ export const ChatMessage = ({ message, isUser, sources, suggestedQuestions, onSu
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
           >
-            <p className="text-xs font-semibold text-gray-600 uppercase">💡 Follow-up Questions</p>
+            <div className="flex items-center gap-2">
+              <Lightbulb className="w-4 h-4 text-primary" />
+              <p className="text-xs font-semibold text-text-secondary uppercase">Follow-up Questions</p>
+            </div>
             <div className="space-y-2">
               {suggestedQuestions.map((question, idx) => (
                 <button
                   key={idx}
                   onClick={() => onSuggestedClick(question)}
-                  className="w-full text-left px-4 py-3 bg-gradient-to-r from-teal-50 to-blue-50 border border-teal-200 rounded-lg hover:border-teal-400 hover:shadow-md transition-all group"
+                  className="w-full text-left px-4 py-3 bg-bg-primary border border-border rounded-lg hover:border-primary hover:shadow-md transition-all group"
                 >
-                  <p className="text-sm text-gray-700 group-hover:text-teal-700 transition-colors">
+                  <p className="text-sm text-text-primary group-hover:text-primary transition-colors">
                     {question}
                   </p>
                 </button>
@@ -107,8 +113,8 @@ export const ChatMessage = ({ message, isUser, sources, suggestedQuestions, onSu
         <div
           className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm ${
             isUser
-              ? 'bg-gradient-to-br from-blue-600 to-teal-600'
-              : 'bg-gradient-to-br from-teal-500 to-blue-500'
+              ? 'bg-primary'
+              : 'bg-primary'
           }`}
         >
           {isUser ? 'U' : 'AI'}

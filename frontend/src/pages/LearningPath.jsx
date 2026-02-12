@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Card } from '../components/Card';
 import { Button } from '../components/Button';
 import client from '../api/client';
-import { ExternalLink, Play, FileText, BookOpen } from 'lucide-react';
+import { ExternalLink, Play, FileText, BookOpen, Map, CheckCircle, BookMarked, AlertCircle } from 'lucide-react';
 
 export const LearningPath = () => {
   const [pathData, setPathData] = useState(null);
@@ -60,7 +60,7 @@ export const LearningPath = () => {
   const getStatusColor = (status) => {
     switch (status) {
       case 'mastered': return 'bg-green-100 text-green-800 border-green-300';
-      case 'in-progress': return 'bg-blue-100 text-blue-800 border-blue-300';
+      case 'in-progress': return 'bg-slate-100 text-slate-800 border-slate-300';
       case 'struggling': return 'bg-red-100 text-red-800 border-red-300';
       case 'not-started': return 'bg-gray-100 text-gray-800 border-gray-300';
       default: return 'bg-gray-100 text-gray-800 border-gray-300';
@@ -79,8 +79,8 @@ export const LearningPath = () => {
 
   const getLevelColor = (level) => {
     switch (level) {
-      case 'expert': return 'text-purple-600';
-      case 'intermediate': return 'text-blue-600';
+      case 'expert': return 'text-slate-700';
+      case 'intermediate': return 'text-slate-600';
       case 'beginner': return 'text-orange-600';
       default: return 'text-gray-600';
     }
@@ -103,9 +103,11 @@ export const LearningPath = () => {
     return (
       <div className="text-center py-12">
         <Card className="max-w-md mx-auto">
-          <div className="text-5xl mb-4">🗺️</div>
+          <div className="mb-4">
+            <Map className="w-16 h-16 text-primary mx-auto" />
+          </div>
           <h2 className="text-2xl font-bold mb-4">No Learning Path Yet</h2>
-          <p className="text-gray-600 mb-6">
+          <p className="text-text-secondary mb-6">
             Upload study materials and take quizzes to generate your personalized learning roadmap!
           </p>
           <Button onClick={() => window.location.href = '/content'}>
@@ -118,40 +120,41 @@ export const LearningPath = () => {
 
   return (
     <div className="space-y-8">
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-2">
-          🗺️ Your Learning Path
-        </h1>
-        <p className="text-gray-600">Personalized roadmap based on your progress</p>
-      </motion.div>
+      <div>
+        <div className="flex items-center gap-3 mb-2">
+          <Map className="w-8 h-8 text-primary" />
+          <h1 className="text-4xl font-bold text-text-primary">Your Learning Path</h1>
+        </div>
+        <p className="text-text-secondary">Personalized roadmap based on your progress</p>
+      </div>
 
       {/* Overview Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <Card className="text-center">
           <p className="text-3xl font-bold text-primary">{pathData.totalTopics}</p>
-          <p className="text-sm text-gray-600">Total Topics</p>
+          <p className="text-sm text-text-secondary">Total Topics</p>
         </Card>
-        <Card className="text-center bg-green-50">
-          <p className="text-3xl font-bold text-green-600">{pathData.masteredTopics}</p>
-          <p className="text-sm text-gray-600">Mastered</p>
+        <Card className="text-center">
+          <p className="text-3xl font-bold text-success">{pathData.masteredTopics}</p>
+          <p className="text-sm text-text-secondary">Mastered</p>
         </Card>
-        <Card className="text-center bg-blue-50">
-          <p className="text-3xl font-bold text-blue-600">{pathData.inProgressTopics}</p>
-          <p className="text-sm text-gray-600">In Progress</p>
+        <Card className="text-center">
+          <p className="text-3xl font-bold text-primary">{pathData.inProgressTopics}</p>
+          <p className="text-sm text-text-secondary">In Progress</p>
         </Card>
-        <Card className="text-center bg-red-50">
-          <p className="text-3xl font-bold text-red-600">{pathData.strugglingTopics}</p>
-          <p className="text-sm text-gray-600">Need Review</p>
+        <Card className="text-center">
+          <p className="text-3xl font-bold text-danger">{pathData.strugglingTopics}</p>
+          <p className="text-sm text-text-secondary">Need Review</p>
         </Card>
       </div>
 
       {/* Next Recommended */}
       {pathData.nextRecommended && (
         <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}>
-          <Card className="bg-gradient-to-r from-primary to-secondary text-white">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm opacity-90 mb-1">🎯 Next Recommended</p>
+          <Card className="bg-primary text-black">
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex-1">
+                <p className="text-sm opacity-90 mb-1">Next Recommended</p>
                 <h3 className="text-2xl font-bold">{pathData.nextRecommended.topic}</h3>
                 <p className="text-sm opacity-90 mt-2">
                   {pathData.nextRecommended.prerequisites.length > 0 
@@ -162,6 +165,7 @@ export const LearningPath = () => {
               <Button 
                 variant="secondary"
                 onClick={() => handleTopicClick(pathData.nextRecommended)}
+                className="whitespace-nowrap"
               >
                 Start Learning
               </Button>
@@ -172,18 +176,21 @@ export const LearningPath = () => {
 
       {/* Learning Path Roadmap */}
       <div>
-        <h2 className="text-2xl font-bold mb-4">📊 Your Roadmap</h2>
+        <div className="flex items-center gap-2 mb-4">
+          <BookMarked className="w-6 h-6 text-primary" />
+          <h2 className="text-2xl font-bold">Your Roadmap</h2>
+        </div>
         
         {/* Completed Topics Section */}
         {pathData.path.filter(t => t.accuracy === 100).length > 0 && (
           <div className="mb-8">
             <div className="flex items-center gap-2 mb-4">
-              <span className="text-2xl">✅</span>
-              <h3 className="text-lg font-bold text-green-700">
+              <CheckCircle className="w-5 h-5 text-success" />
+              <h3 className="text-lg font-bold text-success">
                 Completed Topics ({pathData.path.filter(t => t.accuracy === 100).length})
               </h3>
             </div>
-            <div className="space-y-3 bg-green-50 rounded-lg p-4 border-2 border-green-200">
+            <div className="space-y-3 bg-bg-primary rounded-lg p-4 border-2 border-border">
               {pathData.path.filter(t => t.accuracy === 100).map((topic, idx) => (
                 <motion.div
                   key={topic.topic}
@@ -192,23 +199,25 @@ export const LearningPath = () => {
                   transition={{ delay: idx * 0.05 }}
                 >
                   <Card 
-                    className={`cursor-pointer hover:shadow-lg transition-all bg-white ${
-                      selectedTopic?.topic === topic.topic ? 'ring-2 ring-green-500' : ''
+                    className={`cursor-pointer hover:shadow-lg transition-all ${
+                      selectedTopic?.topic === topic.topic ? 'ring-2 ring-success' : ''
                     }`}
                     onClick={() => handleTopicClick(topic)}
                   >
                     <div className="flex items-center gap-4">
                       {/* Status Icon */}
-                      <div className="text-4xl">✅</div>
+                      <div className="text-primary">
+                        <CheckCircle className="w-8 h-8" />
+                      </div>
 
                       {/* Topic Info */}
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-2">
                           <h3 className="text-xl font-bold">{topic.topic}</h3>
-                          <span className="px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 border border-green-300">
+                          <span className="px-3 py-1 rounded-full text-xs font-medium bg-success bg-opacity-10 text-success border border-success">
                             MASTERED
                           </span>
-                          <span className="text-sm font-medium text-green-600">
+                          <span className="text-sm font-medium text-success">
                             Expert
                           </span>
                         </div>
@@ -216,16 +225,16 @@ export const LearningPath = () => {
                         {/* Progress Bar */}
                         {topic.attempts > 0 && (
                           <div className="flex items-center gap-3">
-                            <div className="flex-1 bg-gray-200 rounded-full h-2">
+                            <div className="flex-1 bg-border rounded-full h-2">
                               <div
-                                className="h-2 rounded-full bg-green-500"
+                                className="h-2 rounded-full bg-success"
                                 style={{ width: '100%' }}
                               />
                             </div>
-                            <span className="text-sm font-medium text-gray-700">
+                            <span className="text-sm font-medium text-text-primary">
                               100%
                             </span>
-                            <span className="text-xs text-gray-500">
+                            <span className="text-xs text-text-secondary">
                               ({topic.attempts} attempts)
                             </span>
                           </div>
@@ -243,8 +252,8 @@ export const LearningPath = () => {
         {pathData.path.filter(t => t.accuracy < 100).length > 0 && (
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <span className="text-2xl">📚</span>
-              <h3 className="text-lg font-bold text-blue-700">
+              <BookMarked className="w-5 h-5 text-primary" />
+              <h3 className="text-lg font-bold text-primary">
                 Topics to Master ({pathData.path.filter(t => t.accuracy < 100).length})
               </h3>
             </div>
@@ -264,44 +273,58 @@ export const LearningPath = () => {
                   >
                     <div className="flex items-center gap-4">
                       {/* Status Icon */}
-                      <div className="text-4xl">{getStatusIcon(topic.status)}</div>
+                      <div className="text-primary">
+                        {topic.status === 'mastered' && <CheckCircle className="w-8 h-8" />}
+                        {topic.status === 'in-progress' && <BookMarked className="w-8 h-8" />}
+                        {topic.status === 'struggling' && <AlertCircle className="w-8 h-8" />}
+                        {topic.status === 'not-started' && <BookOpen className="w-8 h-8" />}
+                      </div>
 
                       {/* Topic Info */}
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-2">
                           <h3 className="text-xl font-bold">{topic.topic}</h3>
-                          <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(topic.status)}`}>
+                          <span className={`px-3 py-1 rounded-full text-xs font-medium border ${
+                            topic.status === 'mastered' ? 'bg-success bg-opacity-10 text-success border-success' :
+                            topic.status === 'in-progress' ? 'bg-primary bg-opacity-10 text-primary border-primary' :
+                            topic.status === 'struggling' ? 'bg-danger bg-opacity-10 text-danger border-danger' :
+                            'bg-muted bg-opacity-10 text-muted border-muted'
+                          }`}>
                             {topic.status.replace('-', ' ').toUpperCase()}
                           </span>
-                          <span className={`text-sm font-medium ${getLevelColor(topic.level)}`}>
+                          <span className={`text-sm font-medium ${
+                            topic.level === 'expert' ? 'text-success' :
+                            topic.level === 'intermediate' ? 'text-primary' :
+                            'text-warning'
+                          }`}>
                             {topic.level.charAt(0).toUpperCase() + topic.level.slice(1)}
                           </span>
                         </div>
 
                         {/* Prerequisites */}
                         {topic.prerequisites.length > 0 && (
-                          <p className="text-sm text-gray-600 mb-2">
-                            📋 Prerequisites: {topic.prerequisites.join(', ')}
+                          <p className="text-sm text-text-secondary mb-2">
+                            Prerequisites: {topic.prerequisites.join(', ')}
                           </p>
                         )}
 
                         {/* Progress Bar */}
                         {topic.attempts > 0 && (
                           <div className="flex items-center gap-3">
-                            <div className="flex-1 bg-gray-200 rounded-full h-2">
+                            <div className="flex-1 bg-border rounded-full h-2">
                               <div
                                 className={`h-2 rounded-full transition-all ${
-                                  topic.accuracy >= 90 ? 'bg-green-500' :
-                                  topic.accuracy >= 70 ? 'bg-blue-500' :
-                                  'bg-red-500'
+                                  topic.accuracy >= 90 ? 'bg-success' :
+                                  topic.accuracy >= 70 ? 'bg-primary' :
+                                  'bg-danger'
                                 }`}
                                 style={{ width: `${topic.accuracy}%` }}
                               />
                             </div>
-                            <span className="text-sm font-medium text-gray-700">
+                            <span className="text-sm font-medium text-text-primary">
                               {topic.accuracy}%
                             </span>
-                            <span className="text-xs text-gray-500">
+                            <span className="text-xs text-text-secondary">
                               ({topic.attempts} attempts)
                             </span>
                           </div>
@@ -310,8 +333,8 @@ export const LearningPath = () => {
 
                       {/* Recommended Badge */}
                       {topic.recommended && (
-                        <div className="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-xs font-medium">
-                          ⭐ Recommended
+                        <div className="bg-warning bg-opacity-10 text-warning px-3 py-1 rounded-full text-xs font-medium border border-warning">
+                          Recommended
                         </div>
                       )}
                     </div>
@@ -348,30 +371,35 @@ export const LearningPath = () => {
 
               {/* Stats */}
               <div className="grid grid-cols-3 gap-4 mb-6">
-                <div className="bg-blue-50 rounded-lg p-3 text-center">
-                  <p className="text-2xl font-bold text-blue-600">{topicDetails.accuracy}%</p>
-                  <p className="text-xs text-gray-600">Accuracy</p>
+                <div className="bg-bg-primary rounded-lg p-3 text-center border-2 border-border">
+                  <p className="text-2xl font-bold text-primary">{topicDetails.accuracy}%</p>
+                  <p className="text-xs text-text-secondary">Accuracy</p>
                 </div>
-                <div className="bg-green-50 rounded-lg p-3 text-center">
-                  <p className="text-2xl font-bold text-green-600">{topicDetails.correctAnswers}</p>
-                  <p className="text-xs text-gray-600">Correct</p>
+                <div className="bg-bg-primary rounded-lg p-3 text-center border-2 border-border">
+                  <p className="text-2xl font-bold text-success">{topicDetails.correctAnswers}</p>
+                  <p className="text-xs text-text-secondary">Correct</p>
                 </div>
-                <div className="bg-purple-50 rounded-lg p-3 text-center">
-                  <p className="text-2xl font-bold text-purple-600">{topicDetails.totalQuestions}</p>
-                  <p className="text-xs text-gray-600">Total Questions</p>
+                <div className="bg-bg-primary rounded-lg p-3 text-center border-2 border-border">
+                  <p className="text-2xl font-bold text-primary">{topicDetails.totalQuestions}</p>
+                  <p className="text-xs text-text-secondary">Total Questions</p>
                 </div>
               </div>
 
               {/* Related Content */}
               {topicDetails.relatedContent.length > 0 && (
                 <div className="mb-6">
-                  <h3 className="font-bold mb-3">📚 Related Study Materials</h3>
+                  <div className="flex items-center gap-2 mb-3">
+                    <BookOpen className="w-5 h-5 text-primary" />
+                    <h3 className="font-bold">Related Study Materials</h3>
+                  </div>
                   <div className="space-y-2">
                     {topicDetails.relatedContent.map(content => (
-                      <div key={content.id} className="bg-gray-50 rounded-lg p-3 flex items-center gap-3">
-                        <span className="text-2xl">
-                          {content.type === 'pdf' ? '📄' : content.type === 'youtube' ? '🎥' : '📝'}
-                        </span>
+                      <div key={content.id} className="bg-bg-primary rounded-lg p-3 flex items-center gap-3 border-2 border-border">
+                        <div className="text-primary">
+                          {content.type === 'pdf' && <FileText className="w-5 h-5" />}
+                          {content.type === 'youtube' && <Play className="w-5 h-5" />}
+                          {content.type === 'text' && <BookOpen className="w-5 h-5" />}
+                        </div>
                         <span className="font-medium">{content.title}</span>
                       </div>
                     ))}
@@ -436,7 +464,7 @@ export const LearningPath = () => {
                   {resources.articles && resources.articles.length > 0 && (
                     <div>
                       <h3 className="font-bold mb-3 flex items-center gap-2">
-                        <FileText className="w-5 h-5 text-blue-600" />
+                        <FileText className="w-5 h-5 text-slate-600" />
                         Articles & Documentation
                       </h3>
                       <div className="space-y-2">
@@ -446,14 +474,14 @@ export const LearningPath = () => {
                             href={article.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="block bg-blue-50 rounded-lg p-3 hover:bg-blue-100 transition-colors"
+                            className="block bg-slate-50 rounded-lg p-3 hover:bg-slate-100 transition-colors"
                           >
                             <div className="flex items-start justify-between gap-3">
                               <div className="flex-1 min-w-0">
                                 <p className="font-medium text-sm line-clamp-2">{article.title}</p>
                                 <p className="text-xs text-gray-600 mt-1 line-clamp-1">{article.description}</p>
                                 <div className="flex items-center gap-2 mt-2">
-                                  <span className="text-xs bg-blue-200 text-blue-800 px-2 py-1 rounded">
+                                  <span className="text-xs bg-slate-200 text-slate-800 px-2 py-1 rounded">
                                     {article.platform}
                                   </span>
                                   <ExternalLink className="w-3 h-3 text-gray-500" />
@@ -510,11 +538,16 @@ export const LearningPath = () => {
               {/* Recent Questions */}
               {topicDetails.recentQuestions.length > 0 && (
                 <div>
-                  <h3 className="font-bold mb-3">📝 Recent Questions</h3>
+                  <div className="flex items-center gap-2 mb-3">
+                    <FileText className="w-5 h-5 text-primary" />
+                    <h3 className="font-bold">Recent Questions</h3>
+                  </div>
                   <div className="space-y-2">
                     {topicDetails.recentQuestions.map((q, idx) => (
-                      <div key={idx} className="bg-gray-50 rounded-lg p-3 flex items-center gap-3">
-                        <span className="text-xl">{q.isCorrect ? '✅' : '❌'}</span>
+                      <div key={idx} className="bg-bg-primary rounded-lg p-3 flex items-center gap-3 border-2 border-border">
+                        <div className="text-primary">
+                          {q.isCorrect ? <CheckCircle className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />}
+                        </div>
                         <span className="text-sm flex-1">{q.question}</span>
                       </div>
                     ))}

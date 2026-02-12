@@ -102,13 +102,13 @@ export const SearchBar = () => {
   const getResultIcon = (resultType) => {
     switch (resultType) {
       case 'content':
-        return <BookOpen className="w-4 h-4 text-blue-600" />;
+        return <BookOpen className="w-4 h-4 text-primary" />;
       case 'topic':
-        return <Zap className="w-4 h-4 text-yellow-600" />;
+        return <Zap className="w-4 h-4 text-warning" />;
       case 'flashcard':
-        return <BookOpen className="w-4 h-4 text-purple-600" />;
+        return <BookOpen className="w-4 h-4 text-primary" />;
       case 'chatSession':
-        return <MessageSquare className="w-4 h-4 text-green-600" />;
+        return <MessageSquare className="w-4 h-4 text-success" />;
       case 'quiz':
         return <Zap className="w-4 h-4 text-red-600" />;
       default:
@@ -189,7 +189,7 @@ export const SearchBar = () => {
                         onClick={() => handleResultClick(content)}
                         className="w-full text-left px-3 py-2 hover:bg-gray-50 rounded transition-colors flex items-start gap-3"
                       >
-                        <BookOpen className="w-4 h-4 text-blue-600 mt-1 flex-shrink-0" />
+                        <BookOpen className="w-4 h-4 text-primary mt-1 flex-shrink-0" />
                         <div className="flex-1 min-w-0">
                           <p className="font-medium text-sm truncate">{content.title}</p>
                           {content.topics.length > 0 && (
@@ -230,7 +230,7 @@ export const SearchBar = () => {
                         onClick={() => handleResultClick(card)}
                         className="w-full text-left px-3 py-2 hover:bg-gray-50 rounded transition-colors flex items-start gap-3"
                       >
-                        <BookOpen className="w-4 h-4 text-purple-600 mt-1 flex-shrink-0" />
+                        <BookOpen className="w-4 h-4 text-primary mt-1 flex-shrink-0" />
                         <div className="flex-1 min-w-0">
                           <p className="font-medium text-sm truncate">{card.front}</p>
                           <p className="text-xs text-gray-500 truncate">{card.topic}</p>
@@ -307,7 +307,7 @@ export const SearchBar = () => {
                             onClick={() => handleSuggestionClick(content.title)}
                             className="w-full text-left px-3 py-2 hover:bg-gray-50 rounded transition-colors flex items-center gap-3"
                           >
-                            <BookOpen className="w-4 h-4 text-blue-600" />
+                            <BookOpen className="w-4 h-4 text-primary" />
                             <span className="font-medium text-sm truncate">{content.title}</span>
                           </button>
                         ))}

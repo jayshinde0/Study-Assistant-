@@ -2,9 +2,10 @@ import { motion } from 'framer-motion';
 
 export const Card = ({ children, className = '', ...props }) => (
   <motion.div
-    className={`bg-white rounded-xl shadow-md hover:shadow-xl border border-slate-200 p-6 transition-all duration-300 ${className}`}
-    whileHover={{ y: -4, boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)' }}
-    transition={{ duration: 0.2 }}
+    className={`bg-white rounded-md border border-border p-4 transition-all duration-150 ${className}`}
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    transition={{ duration: 0.15 }}
     {...props}
   >
     {children}

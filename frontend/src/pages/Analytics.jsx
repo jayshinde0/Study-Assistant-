@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Card } from '../components/Card';
 import client from '../api/client';
+import { BarChart3, TrendingUp, Lightbulb, AlertCircle, CheckCircle, AlertTriangle } from 'lucide-react';
 
 export const Analytics = () => {
   const [performance, setPerformance] = useState(null);
@@ -40,8 +41,8 @@ export const Analytics = () => {
   if (error) {
     return (
       <div className="text-center py-12">
-        <p className="text-red-600 mb-4">Error loading analytics: {error}</p>
-        <p className="text-gray-600">Try taking a quiz first to generate analytics data.</p>
+        <p className="text-danger mb-4">Error loading analytics: {error}</p>
+        <p className="text-text-secondary">Try taking a quiz first to generate analytics data.</p>
       </div>
     );
   }
@@ -49,11 +50,14 @@ export const Analytics = () => {
   if (!performance || (performance.topicStats?.length === 0 && trend.length === 0 && !topicMastery)) {
     return (
       <div className="text-center py-12">
-        <h2 className="text-2xl font-bold mb-4">No Analytics Data Yet</h2>
-        <p className="text-gray-600 mb-6">Take some quizzes to see your performance analytics!</p>
-        <div className="bg-blue-50 rounded-lg p-6 max-w-md mx-auto">
-          <p className="text-blue-800 font-semibold mb-2">📊 How to Generate Analytics:</p>
-          <ol className="text-left text-blue-700 text-sm space-y-2">
+        <h2 className="text-2xl font-semibold text-text-primary mb-4">No Analytics Data Yet</h2>
+        <p className="text-text-secondary mb-6">Take some quizzes to see your performance analytics!</p>
+        <div className="bg-bg-primary rounded-lg p-6 max-w-md mx-auto border border-border">
+          <div className="flex items-center gap-2 mb-2">
+            <BarChart3 className="w-5 h-5 text-primary" />
+            <p className="text-text-primary font-semibold">How to Generate Analytics:</p>
+          </div>
+          <ol className="text-left text-text-secondary text-sm space-y-2">
             <li>1. Go to Content tab</li>
             <li>2. Upload study material</li>
             <li>3. Click "Generate Quiz"</li>
@@ -71,10 +75,11 @@ export const Analytics = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-2">
-          📊 Your Learning Analytics
-        </h1>
-        <p className="text-gray-600">Track your progress and master topics</p>
+        <div className="flex items-center gap-3 mb-2">
+          <BarChart3 className="w-8 h-8 text-primary" />
+          <h1 className="text-4xl font-bold text-text-primary">Your Learning Analytics</h1>
+        </div>
+        <p className="text-text-secondary">Track your progress and master topics</p>
       </motion.div>
 
       {/* User Stats */}
@@ -85,21 +90,21 @@ export const Analytics = () => {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.1 }}
         >
-          <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
-            <p className="text-gray-600 text-sm font-medium">Total Quizzes</p>
-            <p className="text-4xl font-bold text-blue-600 mt-2">{performance.user.totalQuizzesTaken}</p>
+          <Card className="bg-white border-border">
+            <p className="text-text-secondary text-xs font-medium uppercase tracking-wide">Total Quizzes</p>
+            <p className="text-3xl font-semibold text-text-primary mt-2">{performance.user.totalQuizzesTaken}</p>
           </Card>
-          <Card className="bg-gradient-to-br from-green-50 to-green-100 border-green-200">
-            <p className="text-gray-600 text-sm font-medium">Average Accuracy</p>
-            <p className="text-4xl font-bold text-green-600 mt-2">{Math.round(performance.user.averageAccuracy)}%</p>
+          <Card className="bg-white border-border">
+            <p className="text-text-secondary text-xs font-medium uppercase tracking-wide">Average Accuracy</p>
+            <p className="text-3xl font-semibold text-primary mt-2">{Math.round(performance.user.averageAccuracy)}%</p>
           </Card>
-          <Card className="bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200">
-            <p className="text-gray-600 text-sm font-medium">XP Earned</p>
-            <p className="text-4xl font-bold text-purple-600 mt-2">{performance.user.xp}</p>
+          <Card className="bg-white border-border">
+            <p className="text-text-secondary text-xs font-medium uppercase tracking-wide">XP Earned</p>
+            <p className="text-3xl font-semibold text-text-primary mt-2">{performance.user.xp}</p>
           </Card>
-          <Card className="bg-gradient-to-br from-orange-50 to-orange-100 border-orange-200">
-            <p className="text-gray-600 text-sm font-medium">Current Streak</p>
-            <p className="text-4xl font-bold text-orange-600 mt-2">{performance.user.streak}</p>
+          <Card className="bg-white border-border">
+            <p className="text-text-secondary text-xs font-medium uppercase tracking-wide">Current Streak</p>
+            <p className="text-3xl font-semibold text-text-primary mt-2">{performance.user.streak}</p>
           </Card>
         </motion.div>
       )}
@@ -112,7 +117,10 @@ export const Analytics = () => {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
         >
-          <h2 className="text-2xl font-bold">🎯 Topic Mastery (Adaptive Learning)</h2>
+          <div className="flex items-center gap-2">
+            <TrendingUp className="w-6 h-6 text-primary" />
+            <h2 className="text-2xl font-semibold text-text-primary">Topic Mastery (Adaptive Learning)</h2>
+          </div>
           
           {/* Recommendation Banner */}
           {recommendations && (
@@ -121,20 +129,22 @@ export const Analytics = () => {
               animate={{ x: 0, opacity: 1 }}
               transition={{ delay: 0.3 }}
             >
-              <Card className="bg-gradient-to-r from-indigo-50 via-blue-50 to-indigo-50 border-l-4 border-indigo-500 shadow-lg">
+              <Card className="bg-bg-primary border-l-4 border-primary shadow-soft">
                 <div className="flex items-start gap-4">
-                  <span className="text-3xl">💡</span>
+                  <Lightbulb className="w-8 h-8 text-primary flex-shrink-0 mt-1" />
                   <div className="flex-1">
-                    <p className="text-sm text-gray-600 font-medium mb-1">Personalized Recommendation</p>
-                    <p className="text-xl font-bold text-indigo-700 mb-3">{recommendations.recommendation}</p>
+                    <p className="text-xs text-text-secondary font-medium mb-1 uppercase tracking-wide">Personalized Recommendation</p>
+                    <p className="text-lg font-semibold text-text-primary mb-3">{recommendations.recommendation}</p>
                     {recommendations.weakTopics?.length > 0 && (
-                      <p className="text-sm text-gray-700 mb-2">
-                        🔴 Focus on: <span className="font-semibold text-indigo-600">{recommendations.weakTopics.join(', ')}</span>
+                      <p className="text-sm text-text-secondary mb-2">
+                        <AlertCircle className="w-4 h-4 inline mr-1 text-danger" />
+                        Focus on: <span className="font-medium text-text-primary">{recommendations.weakTopics.join(', ')}</span>
                       </p>
                     )}
                     {recommendations.revisionTopics?.length > 0 && (
-                      <p className="text-sm text-gray-700">
-                        🟡 Review: <span className="font-semibold text-indigo-600">{recommendations.revisionTopics.join(', ')}</span>
+                      <p className="text-sm text-text-secondary">
+                        <AlertTriangle className="w-4 h-4 inline mr-1 text-warning" />
+                        Review: <span className="font-medium text-text-primary">{recommendations.revisionTopics.join(', ')}</span>
                       </p>
                     )}
                   </div>
@@ -157,15 +167,17 @@ export const Analytics = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.3 + sectionIdx * 0.1 }}
                   >
-                    <h3 className="text-xl font-bold text-gray-800 border-b-2 border-primary pb-3 flex items-center gap-2">
-                      📚 {contentTitle}
+                    <h3 className="text-lg font-semibold text-text-primary border-b border-border pb-3 flex items-center gap-2">
+                      <BarChart3 className="w-5 h-5 text-primary" />
+                      {contentTitle}
                     </h3>
 
                     {/* Weak Topics for this section */}
                     {contentTopics.some(t => t.accuracy < 50) && (
-                      <Card className="border-l-4 border-red-500 bg-gradient-to-br from-red-50 to-red-100">
-                        <h4 className="font-bold text-red-700 mb-3 flex items-center gap-2">
-                          🔴 Weak Topics (Need Practice)
+                      <Card className="border-l-4 border-danger bg-white">
+                        <h4 className="font-semibold text-danger mb-3 flex items-center gap-2">
+                          <AlertCircle className="w-5 h-5" />
+                          Weak Topics (Need Practice)
                         </h4>
                         <div className="space-y-2">
                           {contentTopics
@@ -173,13 +185,13 @@ export const Analytics = () => {
                             .map((topic, idx) => (
                               <motion.div
                                 key={idx}
-                                className="flex justify-between items-center p-3 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow"
+                                className="flex justify-between items-center p-3 bg-bg-primary rounded-lg border border-border hover:shadow-soft transition-shadow"
                                 initial={{ opacity: 0, x: -10 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ delay: 0.1 * idx }}
                               >
-                                <span className="font-medium text-gray-700">{topic.topic}</span>
-                                <span className="text-red-600 font-bold text-lg">{topic.accuracy.toFixed(1)}%</span>
+                                <span className="font-medium text-text-primary">{topic.topic}</span>
+                                <span className="text-danger font-semibold text-lg">{topic.accuracy.toFixed(1)}%</span>
                               </motion.div>
                             ))}
                         </div>
@@ -188,9 +200,10 @@ export const Analytics = () => {
 
                     {/* Medium Topics for this section */}
                     {contentTopics.some(t => t.accuracy >= 50 && t.accuracy <= 80) && (
-                      <Card className="border-l-4 border-yellow-500 bg-gradient-to-br from-yellow-50 to-yellow-100">
-                        <h4 className="font-bold text-yellow-700 mb-3 flex items-center gap-2">
-                          🟡 Medium Topics (Keep Practicing)
+                      <Card className="border-l-4 border-warning bg-white">
+                        <h4 className="font-semibold text-warning mb-3 flex items-center gap-2">
+                          <AlertTriangle className="w-5 h-5" />
+                          Medium Topics (Keep Practicing)
                         </h4>
                         <div className="space-y-2">
                           {contentTopics
@@ -198,13 +211,13 @@ export const Analytics = () => {
                             .map((topic, idx) => (
                               <motion.div
                                 key={idx}
-                                className="flex justify-between items-center p-3 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow"
+                                className="flex justify-between items-center p-3 bg-bg-primary rounded-lg border border-border hover:shadow-soft transition-shadow"
                                 initial={{ opacity: 0, x: -10 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ delay: 0.1 * idx }}
                               >
-                                <span className="font-medium text-gray-700">{topic.topic}</span>
-                                <span className="text-yellow-600 font-bold text-lg">{topic.accuracy.toFixed(1)}%</span>
+                                <span className="font-medium text-text-primary">{topic.topic}</span>
+                                <span className="text-warning font-semibold text-lg">{topic.accuracy.toFixed(1)}%</span>
                               </motion.div>
                             ))}
                         </div>
@@ -213,9 +226,10 @@ export const Analytics = () => {
 
                     {/* Strong Topics for this section */}
                     {contentTopics.some(t => t.accuracy > 80) && (
-                      <Card className="border-l-4 border-green-500 bg-gradient-to-br from-green-50 to-green-100">
-                        <h4 className="font-bold text-green-700 mb-3 flex items-center gap-2">
-                          🟢 Strong Topics (Mastered)
+                      <Card className="border-l-4 border-success bg-white">
+                        <h4 className="font-semibold text-success mb-3 flex items-center gap-2">
+                          <CheckCircle className="w-5 h-5" />
+                          Strong Topics (Mastered)
                         </h4>
                         <div className="space-y-2">
                           {contentTopics
@@ -223,13 +237,13 @@ export const Analytics = () => {
                             .map((topic, idx) => (
                               <motion.div
                                 key={idx}
-                                className="flex justify-between items-center p-3 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow"
+                                className="flex justify-between items-center p-3 bg-bg-primary rounded-lg border border-border hover:shadow-soft transition-shadow"
                                 initial={{ opacity: 0, x: -10 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ delay: 0.1 * idx }}
                               >
-                                <span className="font-medium text-gray-700">{topic.topic}</span>
-                                <span className="text-green-600 font-bold text-lg">{topic.accuracy.toFixed(1)}%</span>
+                                <span className="font-medium text-text-primary">{topic.topic}</span>
+                                <span className="text-success font-semibold text-lg">{topic.accuracy.toFixed(1)}%</span>
                               </motion.div>
                             ))}
                         </div>
@@ -243,21 +257,22 @@ export const Analytics = () => {
 
           {/* Revision Due */}
           {topicMastery.revisionDue?.length > 0 && (
-            <Card className="border-l-4 border-purple-500 bg-gradient-to-br from-purple-50 to-purple-100">
-              <h3 className="font-bold text-purple-700 mb-3 flex items-center gap-2">
-                📅 Topics Due for Revision
+            <Card className="border-l-4 border-primary bg-white">
+              <h3 className="font-semibold text-text-primary mb-3 flex items-center gap-2">
+                <TrendingUp className="w-5 h-5 text-primary" />
+                Topics Due for Revision
               </h3>
               <div className="space-y-2">
                 {topicMastery.revisionDue.map((topic, idx) => (
                   <motion.div
                     key={idx}
-                    className="flex justify-between items-center p-3 bg-white rounded-lg shadow-sm"
+                    className="flex justify-between items-center p-3 bg-bg-primary rounded-lg border border-border"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.1 * idx }}
                   >
-                    <span className="font-medium text-gray-700">{topic.topic}</span>
-                    <span className="text-xs text-purple-600 font-semibold bg-purple-100 px-3 py-1 rounded-full">
+                    <span className="font-medium text-text-primary">{topic.topic}</span>
+                    <span className="text-xs text-primary font-medium bg-bg-primary px-3 py-1 rounded-full border border-border">
                       {new Date(topic.nextRevisionDate).toLocaleDateString()}
                     </span>
                   </motion.div>
@@ -270,7 +285,7 @@ export const Analytics = () => {
 
       {/* Divider */}
       {topicMastery && (performance?.topicStats?.length > 0 || trend.length > 0) && (
-        <hr className="my-8 border-gray-200" />
+        <hr className="my-8 border-border" />
       )}
 
       {/* Charts */}
@@ -280,15 +295,18 @@ export const Analytics = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
         >
-          <Card className="bg-gradient-to-br from-white to-gray-50">
-            <h2 className="text-2xl font-bold mb-6">📊 Topic-wise Performance</h2>
+          <Card className="bg-white border-border">
+            <div className="flex items-center gap-2 mb-6">
+              <BarChart3 className="w-6 h-6 text-primary" />
+              <h2 className="text-2xl font-semibold text-text-primary">Topic-wise Performance</h2>
+            </div>
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={performance.topicStats}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
                 <XAxis dataKey="topic" />
                 <YAxis />
-                <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }} />
-                <Bar dataKey="accuracy" fill="#6366F1" radius={[8, 8, 0, 0]} />
+                <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }} />
+                <Bar dataKey="accuracy" fill="#2c3e50" radius={[8, 8, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </Card>
@@ -302,16 +320,19 @@ export const Analytics = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
         >
-          <Card className="bg-gradient-to-br from-white to-gray-50">
-            <h2 className="text-2xl font-bold mb-6">📈 Progress Trend</h2>
+          <Card className="bg-white border-border">
+            <div className="flex items-center gap-2 mb-6">
+              <TrendingUp className="w-6 h-6 text-primary" />
+              <h2 className="text-2xl font-semibold text-text-primary">Progress Trend</h2>
+            </div>
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={trend}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
                 <XAxis dataKey="date" />
                 <YAxis />
-                <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }} />
+                <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }} />
                 <Legend />
-                <Line type="monotone" dataKey="averageAccuracy" stroke="#6366F1" strokeWidth={3} dot={{ fill: '#6366F1', r: 5 }} />
+                <Line type="monotone" dataKey="averageAccuracy" stroke="#2c3e50" strokeWidth={3} dot={{ fill: '#2c3e50', r: 5 }} />
               </LineChart>
             </ResponsiveContainer>
           </Card>

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Card } from '../components/Card';
 import { Button } from '../components/Button';
+import { User, BarChart3, Trophy, Users } from 'lucide-react';
 import client from '../api/client';
 import { useAuthStore } from '../store/authStore';
 
@@ -74,8 +75,8 @@ export const Profile = () => {
 
   if (error) {
     return (
-      <Card className="bg-red-50 border-2 border-red-300">
-        <p className="text-red-800 font-medium">❌ {error}</p>
+      <Card className="bg-danger bg-opacity-10 border-2 border-danger">
+        <p className="text-danger font-medium">{error}</p>
       </Card>
     );
   }
@@ -94,11 +95,11 @@ export const Profile = () => {
     <div className="space-y-8">
       {/* Header */}
       <div>
-        <Card className="bg-gradient-to-r from-primary to-secondary text-white">
+        <Card className="bg-primary text-black">
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-6">
-              <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center text-4xl">
-                {profile.avatar || '👤'}
+              <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center">
+                <User className="w-12 h-12 text-primary" />
               </div>
               <div>
                 <h1 className="text-4xl font-bold mb-2">{profile.name}</h1>
@@ -141,49 +142,52 @@ export const Profile = () => {
       {/* Stats Grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <Card className="text-center">
-          <p className="text-sm text-gray-600 mb-2">Total XP</p>
+          <p className="text-sm text-text-secondary mb-2">Total XP</p>
           <p className="text-3xl font-bold text-primary">{profile.totalXP || 0}</p>
         </Card>
         <Card className="text-center">
-          <p className="text-sm text-gray-600 mb-2">Accuracy</p>
-          <p className="text-3xl font-bold text-green-600">{Math.round(profile.averageAccuracy || 0)}%</p>
+          <p className="text-sm text-text-secondary mb-2">Accuracy</p>
+          <p className="text-3xl font-bold text-success">{Math.round(profile.averageAccuracy || 0)}%</p>
         </Card>
         <Card className="text-center">
-          <p className="text-sm text-gray-600 mb-2">Quizzes</p>
-          <p className="text-3xl font-bold text-blue-600">{profile.totalQuizzesTaken || 0}</p>
+          <p className="text-sm text-text-secondary mb-2">Quizzes</p>
+          <p className="text-3xl font-bold text-primary">{profile.totalQuizzesTaken || 0}</p>
         </Card>
         <Card className="text-center">
-          <p className="text-sm text-gray-600 mb-2">Streak</p>
-          <p className="text-3xl font-bold text-orange-600">{profile.currentStreak || 0}</p>
+          <p className="text-sm text-text-secondary mb-2">Streak</p>
+          <p className="text-3xl font-bold text-warning">{profile.currentStreak || 0}</p>
         </Card>
       </div>
 
       {/* Study Statistics */}
       <Card>
-        <h2 className="text-2xl font-bold mb-6">📊 Study Statistics</h2>
+        <div className="flex items-center gap-2 mb-6">
+          <BarChart3 className="w-6 h-6 text-primary" />
+          <h2 className="text-2xl font-bold">Study Statistics</h2>
+        </div>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
           <div>
-            <p className="text-sm text-gray-600 mb-2">Study Hours</p>
+            <p className="text-sm text-text-secondary mb-2">Study Hours</p>
             <p className="text-2xl font-bold">{profile.totalStudyHours || 0}h</p>
           </div>
           <div>
-            <p className="text-sm text-gray-600 mb-2">Topics Studied</p>
+            <p className="text-sm text-text-secondary mb-2">Topics Studied</p>
             <p className="text-2xl font-bold">{profile.topicsStudied || 0}</p>
           </div>
           <div>
-            <p className="text-sm text-gray-600 mb-2">Topics Mastered</p>
-            <p className="text-2xl font-bold text-green-600">{profile.topicsMastered || 0}</p>
+            <p className="text-sm text-text-secondary mb-2">Topics Mastered</p>
+            <p className="text-2xl font-bold text-success">{profile.topicsMastered || 0}</p>
           </div>
           <div>
-            <p className="text-sm text-gray-600 mb-2">Longest Streak</p>
+            <p className="text-sm text-text-secondary mb-2">Longest Streak</p>
             <p className="text-2xl font-bold">{profile.longestStreak || 0} days</p>
           </div>
           <div>
-            <p className="text-sm text-gray-600 mb-2">Avg Quiz Score</p>
+            <p className="text-sm text-text-secondary mb-2">Avg Quiz Score</p>
             <p className="text-2xl font-bold">{Math.round(profile.averageQuizScore || 0)}%</p>
           </div>
           <div>
-            <p className="text-sm text-gray-600 mb-2">Member Since</p>
+            <p className="text-sm text-text-secondary mb-2">Member Since</p>
             <p className="text-sm font-bold">{new Date(profile.joinedAt).toLocaleDateString()}</p>
           </div>
         </div>
@@ -192,13 +196,16 @@ export const Profile = () => {
       {/* Badges */}
       {profile.badges && profile.badges.length > 0 && (
         <Card>
-          <h2 className="text-2xl font-bold mb-6">🏆 Achievements</h2>
+          <div className="flex items-center gap-2 mb-6">
+            <Trophy className="w-6 h-6 text-primary" />
+            <h2 className="text-2xl font-bold">Achievements</h2>
+          </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {profile.badges.map((badge, idx) => (
-              <div key={idx} className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-lg p-4 text-center border-2 border-yellow-200">
+              <div key={idx} className="bg-bg-primary rounded-lg p-4 text-center border-2 border-border">
                 <p className="text-3xl mb-2">{badge.icon || '⭐'}</p>
                 <p className="font-bold text-sm">{badge.name}</p>
-                <p className="text-xs text-gray-600 mt-1">{badge.description}</p>
+                <p className="text-xs text-text-secondary mt-1">{badge.description}</p>
               </div>
             ))}
           </div>
@@ -208,13 +215,16 @@ export const Profile = () => {
       {/* Followers */}
       {profile.followers && profile.followers.length > 0 && (
         <Card>
-          <h2 className="text-2xl font-bold mb-6">👥 Followers ({profile.followers.length})</h2>
+          <div className="flex items-center gap-2 mb-6">
+            <Users className="w-6 h-6 text-primary" />
+            <h2 className="text-2xl font-bold">Followers ({profile.followers.length})</h2>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {profile.followers.map((follower) => (
-              <div key={follower._id} className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-4 border border-blue-200 flex items-center justify-between">
+              <div key={follower._id} className="bg-bg-primary rounded-lg p-4 border-2 border-border flex items-center justify-between">
                 <div>
                   <p className="font-bold">{follower.name}</p>
-                  <p className="text-sm text-gray-600">@{follower.username}</p>
+                  <p className="text-sm text-text-secondary">@{follower.username}</p>
                 </div>
                 <button
                   onClick={() => navigate(`/profile/${follower.username}`)}
@@ -231,13 +241,16 @@ export const Profile = () => {
       {/* Following */}
       {profile.following && profile.following.length > 0 && (
         <Card>
-          <h2 className="text-2xl font-bold mb-6">🔗 Following ({profile.following.length})</h2>
+          <div className="flex items-center gap-2 mb-6">
+            <Users className="w-6 h-6 text-primary" />
+            <h2 className="text-2xl font-bold">Following ({profile.following.length})</h2>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {profile.following.map((followingUser) => (
-              <div key={followingUser._id} className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg p-4 border border-green-200 flex items-center justify-between">
+              <div key={followingUser._id} className="bg-bg-primary rounded-lg p-4 border-2 border-border flex items-center justify-between">
                 <div>
                   <p className="font-bold">{followingUser.name}</p>
-                  <p className="text-sm text-gray-600">@{followingUser.username}</p>
+                  <p className="text-sm text-text-secondary">@{followingUser.username}</p>
                 </div>
                 <button
                   onClick={() => navigate(`/profile/${followingUser.username}`)}
@@ -253,7 +266,7 @@ export const Profile = () => {
 
       {/* Edit Profile Modal */}
       {editMode && isOwnProfile && (
-        <Card className="bg-blue-50 border-2 border-blue-300">
+        <Card className="bg-bg-primary border-2 border-border">
           <h2 className="text-2xl font-bold mb-6">Edit Profile</h2>
           <div className="space-y-4">
             <div>

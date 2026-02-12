@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { MessageCircle, Plus, Trash2, Zap } from 'lucide-react';
+import { MessageCircle, Plus, Trash2, Zap, Upload, Lightbulb, AlertCircle } from 'lucide-react';
 import { ChatMessage } from '../components/ChatMessage';
 import { ChatInput } from '../components/ChatInput';
 import { SuggestedQuestions } from '../components/SuggestedQuestions';
@@ -207,7 +207,7 @@ export const ChatBot = () => {
     <div className="flex h-screen bg-gray-50">
       {/* Sidebar */}
       <motion.div
-        className={`fixed md:relative w-64 bg-white border-r border-gray-200 flex flex-col h-screen z-40 transition-transform ${
+        className={`fixed md:relative w-64 bg-white border-r border-border flex flex-col h-screen z-40 transition-transform ${
           showSessions ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
         }`}
         initial={{ x: -256 }}
@@ -215,7 +215,7 @@ export const ChatBot = () => {
         transition={{ duration: 0.3 }}
       >
         {/* Header */}
-        <div className="p-6 border-b border-gray-200">
+        <div className="p-6 border-b border-border">
           <Button onClick={handleNewChat} className="w-full flex items-center justify-center gap-2">
             <Plus className="w-4 h-4" />
             New Chat
@@ -224,9 +224,9 @@ export const ChatBot = () => {
 
         {/* Sessions List */}
         <div className="flex-1 overflow-y-auto p-4 space-y-2">
-          <p className="text-xs font-semibold text-gray-600 uppercase px-2 mb-3">Recent Chats</p>
+          <p className="text-xs font-semibold text-text-secondary uppercase px-2 mb-3">Recent Chats</p>
           {sessions.length === 0 ? (
-            <p className="text-sm text-gray-500 text-center py-8">No chat history yet</p>
+            <p className="text-sm text-text-secondary text-center py-8">No chat history yet</p>
           ) : (
             sessions.map(session => (
               <motion.div
@@ -235,16 +235,16 @@ export const ChatBot = () => {
                 whileHover={{ x: 4 }}
                 className={`w-full text-left px-3 py-2 rounded-lg transition-all group cursor-pointer ${
                   sessionId === session._id
-                    ? 'bg-blue-100 border border-blue-300'
-                    : 'hover:bg-gray-100 border border-transparent'
+                    ? 'bg-primary bg-opacity-10 border border-primary'
+                    : 'hover:bg-bg-primary border border-transparent'
                 }`}
               >
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-900 truncate">
+                    <p className="text-sm font-medium text-text-primary truncate">
                       {session.sessionTitle}
                     </p>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-text-secondary">
                       {session.totalMessages} messages
                     </p>
                   </div>
@@ -252,7 +252,7 @@ export const ChatBot = () => {
                     onClick={(e) => handleDeleteSession(session._id, e)}
                     className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0"
                   >
-                    <Trash2 className="w-4 h-4 text-red-500 hover:text-red-700" />
+                    <Trash2 className="w-4 h-4 text-danger hover:text-danger hover:opacity-75" />
                   </button>
                 </div>
               </motion.div>
@@ -261,13 +261,14 @@ export const ChatBot = () => {
         </div>
 
         {/* Footer */}
-        <div className="p-4 border-t border-gray-200 space-y-2">
+        <div className="p-4 border-t border-border space-y-2">
           <Button
             variant="secondary"
             onClick={() => navigate('/content')}
-            className="w-full text-sm"
+            className="w-full text-sm flex items-center justify-center gap-2"
           >
-            📚 Upload Materials
+            <Upload className="w-4 h-4" />
+            Upload Materials
           </Button>
         </div>
       </motion.div>
@@ -276,17 +277,17 @@ export const ChatBot = () => {
       <div className="flex-1 flex flex-col">
         {/* Header */}
         <motion.div
-          className="bg-white border-b border-gray-200 p-6 flex items-center justify-between"
+          className="bg-white border-b border-border p-6 flex items-center justify-between"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
         >
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-teal-600 rounded-lg flex items-center justify-center">
+            <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
               <MessageCircle className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Study Buddy</h1>
-              <p className="text-sm text-gray-600">AI-powered learning assistant</p>
+              <h1 className="text-2xl font-bold text-text-primary">Study Buddy</h1>
+              <p className="text-sm text-text-secondary">AI-powered learning assistant</p>
             </div>
           </div>
 
@@ -311,22 +312,27 @@ export const ChatBot = () => {
         </motion.div>
 
         {/* Messages Area */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-6">
+        <div className="flex-1 overflow-y-auto p-6 space-y-6 bg-bg-primary">
           {messages.length === 0 ? (
             <motion.div
               className="h-full flex items-center justify-center"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
             >
-              <Card className="text-center max-w-md bg-gradient-to-br from-blue-50 to-teal-50 border-blue-200">
-                <div className="text-5xl mb-4">💬</div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">Welcome to Study Buddy</h2>
-                <p className="text-gray-600 mb-6">
+              <Card className="text-center max-w-md bg-bg-primary border-2 border-border">
+                <div className="mb-4">
+                  <MessageCircle className="w-16 h-16 text-primary mx-auto" />
+                </div>
+                <h2 className="text-2xl font-bold text-text-primary mb-2">Welcome to Study Buddy</h2>
+                <p className="text-text-secondary mb-6">
                   Ask me anything about your uploaded study materials. I'll provide answers based on your content and suggest follow-up questions.
                 </p>
                 <div className="space-y-2 text-left">
-                  <p className="text-sm font-semibold text-gray-700">💡 Try asking:</p>
-                  <ul className="text-sm text-gray-600 space-y-1">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Lightbulb className="w-4 h-4 text-primary" />
+                    <p className="text-sm font-semibold text-text-primary">Try asking:</p>
+                  </div>
+                  <ul className="text-sm text-text-secondary space-y-1">
                     <li>• "Explain photosynthesis"</li>
                     <li>• "What are the key concepts?"</li>
                     <li>• "How does this relate to...?"</li>
@@ -375,9 +381,12 @@ export const ChatBot = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
           >
-            <Card className="bg-orange-50 border-orange-200 text-center">
-              <p className="text-orange-800 font-semibold mb-3">📁 No Study Materials Found</p>
-              <p className="text-orange-700 text-sm mb-4">
+            <Card className="bg-bg-primary border-2 border-danger text-center">
+              <div className="flex items-center justify-center gap-2 mb-3">
+                <AlertCircle className="w-5 h-5 text-danger" />
+                <p className="text-danger font-semibold">No Study Materials Found</p>
+              </div>
+              <p className="text-danger text-sm mb-4">
                 Upload some study materials first to start chatting with the AI.
               </p>
               <Button onClick={() => navigate('/content')} className="w-full">

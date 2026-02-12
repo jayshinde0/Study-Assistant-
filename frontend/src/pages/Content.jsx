@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Upload, Bookmark, FileText, Link } from 'lucide-react';
+import { Upload, Bookmark, FileText, Link, BookOpen, Zap, Play, Youtube } from 'lucide-react';
 import { Card } from '../components/Card';
 import { Button } from '../components/Button';
 import { Input } from '../components/Input';
@@ -175,12 +175,12 @@ export const Content = () => {
             {/* Header */}
             <div className="mb-6 pb-4 border-b">
               <div className="flex items-center gap-3 mb-3">
-                {selectedContent.type === 'pdf' && <span className="text-3xl">📄</span>}
-                {selectedContent.type === 'youtube' && <span className="text-3xl">🎥</span>}
-                {selectedContent.type === 'text' && <span className="text-3xl">📝</span>}
+                {selectedContent.type === 'pdf' && <FileText className="w-8 h-8 text-primary" />}
+                {selectedContent.type === 'youtube' && <Play className="w-8 h-8 text-primary" />}
+                {selectedContent.type === 'text' && <BookOpen className="w-8 h-8 text-primary" />}
                 <div className="flex-1">
                   <h3 className="text-2xl font-bold">{selectedContent.title}</h3>
-                  <p className="text-sm text-gray-500 mt-1">
+                  <p className="text-sm text-text-secondary mt-1">
                     Type: <span className="font-semibold capitalize">{selectedContent.type}</span>
                   </p>
                 </div>
@@ -189,7 +189,10 @@ export const Content = () => {
 
             {/* Topics */}
             <div className="mb-6">
-              <h4 className="font-bold text-lg mb-3">📚 Topics Covered:</h4>
+              <div className="flex items-center gap-2 mb-3">
+                <BookOpen className="w-5 h-5 text-primary" />
+                <h4 className="font-bold text-lg">Topics Covered</h4>
+              </div>
               <div className="flex flex-wrap gap-2">
                 {selectedContent.topics && selectedContent.topics.length > 0 ? (
                   selectedContent.topics.map((topic, idx) => (
@@ -198,7 +201,7 @@ export const Content = () => {
                     </span>
                   ))
                 ) : (
-                  <p className="text-gray-500">No topics extracted yet</p>
+                  <p className="text-text-secondary">No topics extracted yet</p>
                 )}
               </div>
             </div>
@@ -206,14 +209,17 @@ export const Content = () => {
             {/* Summary Section */}
             <div className="mb-6">
               <div className="flex items-center justify-between mb-4">
-                <h4 className="font-bold text-lg">📝 AI-Generated Summary</h4>
+                <div className="flex items-center gap-2">
+                  <Zap className="w-5 h-5 text-primary" />
+                  <h4 className="font-bold text-lg">AI-Generated Summary</h4>
+                </div>
                 {!selectedContent.summaries?.brief && (
                   <Button
                     onClick={handleGenerateSummary}
                     loading={generatingSummary}
                     size="sm"
                   >
-                    {generatingSummary ? 'Generating...' : '✨ Generate Summary'}
+                    {generatingSummary ? 'Generating...' : 'Generate Summary'}
                   </Button>
                 )}
               </div>
@@ -255,25 +261,28 @@ export const Content = () => {
                   </div>
 
                   {/* Summary Content */}
-                  <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-5 border-2 border-blue-200">
-                    <p className="text-gray-800 leading-relaxed whitespace-pre-wrap">
+                  <div className="bg-bg-primary rounded-lg p-5 border-2 border-border">
+                    <p className="text-text-primary leading-relaxed whitespace-pre-wrap">
                       {selectedContent.summaries[summaryLevel] || 'Summary not available for this level.'}
                     </p>
                   </div>
                 </div>
               ) : (
-                <div className="bg-gray-50 rounded-lg p-6 text-center border-2 border-dashed border-gray-300">
-                  <p className="text-gray-600 mb-3">No summary generated yet</p>
-                  <p className="text-sm text-gray-500">Click "Generate Summary" to create AI-powered summaries at different detail levels</p>
+                <div className="bg-bg-primary rounded-lg p-6 text-center border-2 border-dashed border-border">
+                  <p className="text-text-secondary mb-3">No summary generated yet</p>
+                  <p className="text-sm text-text-secondary">Click "Generate Summary" to create AI-powered summaries at different detail levels</p>
                 </div>
               )}
             </div>
 
             {/* Content Preview */}
             <div className="mb-6">
-              <h4 className="font-bold text-lg mb-3">📖 Original Content Preview:</h4>
-              <div className="bg-gray-50 rounded-lg p-4 max-h-48 overflow-y-auto border">
-                <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-wrap">
+              <div className="flex items-center gap-2 mb-3">
+                <FileText className="w-5 h-5 text-primary" />
+                <h4 className="font-bold text-lg">Original Content Preview</h4>
+              </div>
+              <div className="bg-bg-primary rounded-lg p-4 max-h-48 overflow-y-auto border border-border">
+                <p className="text-text-primary text-sm leading-relaxed whitespace-pre-wrap">
                   {selectedContent.originalText?.substring(0, 800)}
                   {selectedContent.originalText && selectedContent.originalText.length > 800 && '...'}
                 </p>
@@ -282,23 +291,23 @@ export const Content = () => {
 
             {/* Stats */}
             <div className="grid grid-cols-3 gap-4 mb-6">
-              <div className="bg-blue-50 rounded-lg p-3 text-center">
-                <p className="text-2xl font-bold text-blue-600">
+              <div className="bg-bg-primary rounded-lg p-3 text-center border border-border">
+                <p className="text-2xl font-bold text-primary">
                   {selectedContent.topics?.length || 0}
                 </p>
-                <p className="text-xs text-gray-600">Topics</p>
+                <p className="text-xs text-text-secondary">Topics</p>
               </div>
-              <div className="bg-green-50 rounded-lg p-3 text-center">
-                <p className="text-2xl font-bold text-green-600">
+              <div className="bg-bg-primary rounded-lg p-3 text-center border border-border">
+                <p className="text-2xl font-bold text-primary">
                   {Math.ceil((selectedContent.originalText?.length || 0) / 500)}
                 </p>
-                <p className="text-xs text-gray-600">Paragraphs</p>
+                <p className="text-xs text-text-secondary">Paragraphs</p>
               </div>
-              <div className="bg-purple-50 rounded-lg p-3 text-center">
-                <p className="text-2xl font-bold text-purple-600">
-                  {selectedContent.summaries?.brief ? '✅' : '⏳'}
+              <div className="bg-bg-primary rounded-lg p-3 text-center border border-border">
+                <p className="text-2xl font-bold text-primary">
+                  {selectedContent.summaries?.brief ? '✓' : '—'}
                 </p>
-                <p className="text-xs text-gray-600">Summary</p>
+                <p className="text-xs text-text-secondary">Summary</p>
               </div>
             </div>
 
@@ -315,7 +324,7 @@ export const Content = () => {
                 onClick={handleStartQuiz}
                 className="flex-1"
               >
-                ✨ Start Quiz
+                Start Quiz
               </Button>
             </div>
           </Card>
@@ -336,13 +345,13 @@ export const Content = () => {
                 animate={{ rotate: 360 }}
                 transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
               />
-              <h3 className="text-xl font-bold mb-2">🤖 Generating Quiz</h3>
-              <p className="text-gray-600 mb-4">
+              <h3 className="text-xl font-bold mb-2">Generating Quiz</h3>
+              <p className="text-text-secondary mb-4">
                 AI is analyzing your material and creating questions...
               </p>
-              <div className="space-y-2 text-sm text-gray-500">
-                <p>⏳ This may take 10-15 seconds</p>
-                <p>💡 Please wait while Ollama processes</p>
+              <div className="space-y-2 text-sm text-text-secondary">
+                <p>This may take 10-15 seconds</p>
+                <p>Please wait while Ollama processes</p>
               </div>
             </div>
           </Card>
@@ -351,54 +360,61 @@ export const Content = () => {
 
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
         <div className="mb-8">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-2">
-            📚 Smart Library
-          </h1>
-          <p className="text-gray-600">Upload and manage your study materials</p>
+          <div className="flex items-center gap-3 mb-2">
+            <BookOpen className="w-8 h-8 text-primary" />
+            <h1 className="text-4xl font-bold text-text-primary">
+              Smart Library
+            </h1>
+          </div>
+          <p className="text-text-secondary">Upload and manage your study materials</p>
         </div>
 
-        <Card className="bg-gradient-to-br from-white to-gray-50">
+        <Card className="bg-white">
           {/* Tabs */}
           <div className="flex gap-2 mb-8 border-b overflow-x-auto">
             <button
               onClick={() => setActiveTab('text')}
-              className={`px-4 py-3 font-medium border-b-2 transition-all whitespace-nowrap ${
+              className={`px-4 py-3 font-medium border-b-2 transition-all whitespace-nowrap flex items-center gap-2 ${
                 activeTab === 'text'
                   ? 'border-primary text-primary'
-                  : 'border-transparent text-gray-600 hover:text-gray-900'
+                  : 'border-transparent text-text-secondary hover:text-text-primary'
               }`}
             >
-              📝 Text
+              <BookOpen className="w-4 h-4" />
+              Text
             </button>
             <button
               onClick={() => setActiveTab('file')}
-              className={`px-4 py-3 font-medium border-b-2 transition-all whitespace-nowrap ${
+              className={`px-4 py-3 font-medium border-b-2 transition-all whitespace-nowrap flex items-center gap-2 ${
                 activeTab === 'file'
                   ? 'border-primary text-primary'
-                  : 'border-transparent text-gray-600 hover:text-gray-900'
+                  : 'border-transparent text-text-secondary hover:text-text-primary'
               }`}
             >
-              📁 File
+              <Upload className="w-4 h-4" />
+              File
             </button>
             <button
               onClick={() => setActiveTab('pdf')}
-              className={`px-4 py-3 font-medium border-b-2 transition-all whitespace-nowrap ${
+              className={`px-4 py-3 font-medium border-b-2 transition-all whitespace-nowrap flex items-center gap-2 ${
                 activeTab === 'pdf'
                   ? 'border-primary text-primary'
-                  : 'border-transparent text-gray-600 hover:text-gray-900'
+                  : 'border-transparent text-text-secondary hover:text-text-primary'
               }`}
             >
-              📄 PDF URL
+              <FileText className="w-4 h-4" />
+              PDF URL
             </button>
             <button
               onClick={() => setActiveTab('youtube')}
-              className={`px-4 py-3 font-medium border-b-2 transition-all whitespace-nowrap ${
+              className={`px-4 py-3 font-medium border-b-2 transition-all whitespace-nowrap flex items-center gap-2 ${
                 activeTab === 'youtube'
                   ? 'border-primary text-primary'
-                  : 'border-transparent text-gray-600 hover:text-gray-900'
+                  : 'border-transparent text-text-secondary hover:text-text-primary'
               }`}
             >
-              🎥 YouTube
+              <Youtube className="w-4 h-4" />
+              YouTube
             </button>
           </div>
 
@@ -440,11 +456,11 @@ export const Content = () => {
                   />
                   <label htmlFor="file-input" className="cursor-pointer block">
                     <motion.div
-                      className="text-5xl mb-3"
+                      className="mb-3"
                       animate={{ y: [0, -5, 0] }}
                       transition={{ duration: 2, repeat: Infinity }}
                     >
-                      📁
+                      <Upload className="w-12 h-12 text-primary mx-auto" />
                     </motion.div>
                     <p className="font-bold text-gray-700 text-lg">
                       {file ? file.name : 'Click to upload or drag and drop'}
@@ -456,14 +472,14 @@ export const Content = () => {
                 </div>
                 {file && (
                   <motion.div
-                    className="mt-4 p-4 bg-green-50 border-2 border-green-200 rounded-lg"
+                    className="mt-4 p-4 bg-success bg-opacity-10 border-2 border-success rounded-lg"
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                   >
-                    <p className="text-sm text-green-700 font-medium">
-                      ✅ File selected: <span className="font-bold">{file.name}</span>
+                    <p className="text-sm text-success font-medium">
+                      File selected: <span className="font-bold">{file.name}</span>
                     </p>
-                    <p className="text-xs text-green-600 mt-1">
+                    <p className="text-xs text-success opacity-75 mt-1">
                       Size: {(file.size / 1024 / 1024).toFixed(2)} MB
                     </p>
                   </motion.div>
@@ -482,7 +498,7 @@ export const Content = () => {
                   required
                 />
                 <p className="text-xs text-gray-500 mt-3 flex items-center gap-2">
-                  <span>📌</span> Paste a direct link to a PDF file. The AI will extract text from it.
+                  <Link className="w-4 h-4" /> Paste a direct link to a PDF file. The AI will extract text from it.
                 </p>
               </motion.div>
             )}
@@ -498,7 +514,7 @@ export const Content = () => {
                   required
                 />
                 <p className="text-xs text-gray-500 mt-3 flex items-center gap-2">
-                  <span>📌</span> Paste a YouTube video link. The AI will extract the transcript and create questions.
+                  <Link className="w-4 h-4" /> Paste a YouTube video link. The AI will extract the transcript and create questions.
                 </p>
               </motion.div>
             )}
@@ -527,7 +543,8 @@ export const Content = () => {
       ) : contents.length > 0 ? (
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
           <div className="flex items-center gap-2 mb-6">
-            <h2 className="text-3xl font-bold">📖 Your Materials</h2>
+            <BookOpen className="w-8 h-8 text-primary" />
+            <h2 className="text-3xl font-bold">Your Materials</h2>
             <span className="text-sm font-medium px-3 py-1 bg-primary bg-opacity-10 text-primary rounded-full">
               {contents.length} total
             </span>
@@ -547,33 +564,36 @@ export const Content = () => {
             </button>
             <button
               onClick={() => setFilterTab('text')}
-              className={`px-4 py-2 font-medium border-b-2 transition-colors whitespace-nowrap ${
+              className={`px-4 py-2 font-medium border-b-2 transition-colors whitespace-nowrap flex items-center gap-2 ${
                 filterTab === 'text'
                   ? 'border-primary text-primary'
                   : 'border-transparent text-gray-600 hover:text-gray-900'
               }`}
             >
-              📝 Text ({contents.filter(c => c.type === 'text').length})
+              <FileText className="w-4 h-4" />
+              Text ({contents.filter(c => c.type === 'text').length})
             </button>
             <button
               onClick={() => setFilterTab('pdf')}
-              className={`px-4 py-2 font-medium border-b-2 transition-colors whitespace-nowrap ${
+              className={`px-4 py-2 font-medium border-b-2 transition-colors whitespace-nowrap flex items-center gap-2 ${
                 filterTab === 'pdf'
                   ? 'border-primary text-primary'
                   : 'border-transparent text-gray-600 hover:text-gray-900'
               }`}
             >
-              📄 PDF ({contents.filter(c => c.type === 'pdf').length})
+              <FileText className="w-4 h-4" />
+              PDF ({contents.filter(c => c.type === 'pdf').length})
             </button>
             <button
               onClick={() => setFilterTab('youtube')}
-              className={`px-4 py-2 font-medium border-b-2 transition-colors whitespace-nowrap ${
+              className={`px-4 py-2 font-medium border-b-2 transition-colors whitespace-nowrap flex items-center gap-2 ${
                 filterTab === 'youtube'
                   ? 'border-primary text-primary'
                   : 'border-transparent text-gray-600 hover:text-gray-900'
               }`}
             >
-              🎥 YouTube ({contents.filter(c => c.type === 'youtube').length})
+              <Youtube className="w-4 h-4" />
+              YouTube ({contents.filter(c => c.type === 'youtube').length})
             </button>
           </div>
 
@@ -603,12 +623,14 @@ export const Content = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: idx * 0.05 }}
               >
-                <Card className="h-full bg-gradient-to-br from-white to-gray-50 hover:shadow-lg transition-all hover:scale-105 cursor-pointer group">
+                <Card className="h-full hover:shadow-lg transition-all hover:scale-105 cursor-pointer group">
                   <div className="flex justify-between items-start mb-3">
                     <div className="flex items-center gap-3">
-                      <span className="text-3xl group-hover:scale-110 transition-transform">
-                        {content.type === 'pdf' ? '📄' : content.type === 'youtube' ? '🎥' : '📝'}
-                      </span>
+                      <div className="text-primary group-hover:scale-110 transition-transform">
+                        {content.type === 'pdf' && <FileText className="w-8 h-8" />}
+                        {content.type === 'youtube' && <Youtube className="w-8 h-8" />}
+                        {content.type === 'text' && <BookOpen className="w-8 h-8" />}
+                      </div>
                       <div className="flex-1">
                         <h3 className="font-bold text-lg line-clamp-2 group-hover:text-primary transition-colors">
                           {content.title}
@@ -639,7 +661,8 @@ export const Content = () => {
                           setSummaryLevel('brief');
                         }}
                       >
-                        📝 View Summary
+                        <FileText className="w-4 h-4 mr-1 inline" />
+                        View Summary
                       </Button>
                     )}
                     <Button 
@@ -648,7 +671,7 @@ export const Content = () => {
                       onClick={() => handleGenerateQuiz(content)}
                       disabled={generatingQuizId !== null}
                     >
-                      {generatingQuizId === content._id ? '⏳ Generating...' : '✨ Generate Quiz'}
+                      {generatingQuizId === content._id ? 'Generating...' : 'Generate Quiz'}
                     </Button>
                   </div>
                 </Card>
@@ -662,8 +685,10 @@ export const Content = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
         >
-          <Card className="bg-gradient-to-br from-gray-50 to-gray-100 border-2 border-dashed border-gray-300">
-            <div className="text-5xl mb-4">📚</div>
+          <Card className="border-2 border-dashed border-gray-300">
+            <div className="mb-4">
+              <BookOpen className="w-16 h-16 text-primary mx-auto" />
+            </div>
             <p className="text-gray-600 font-medium mb-2">No materials yet</p>
             <p className="text-sm text-gray-500">Upload content to get started with quizzes</p>
           </Card>

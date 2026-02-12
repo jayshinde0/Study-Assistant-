@@ -118,7 +118,7 @@ export const Quiz = () => {
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.6 }}
               >
-                <p className="text-3xl font-bold text-blue-600">+{xpEarned}</p>
+                <p className="text-3xl font-bold text-primary">+{xpEarned}</p>
                 <p className="text-xs text-gray-600 mt-1">XP Earned</p>
               </motion.div>
             </div>
