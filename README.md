@@ -25,7 +25,7 @@ npm run dev
 ## 2️⃣ Features
 
 ### ✅ Feature 1: Upload Study Materials
-
+![alt text](image.png)
 #### A. PDF URL Upload
 - Paste direct link to PDF
 - System extracts text automatically
@@ -79,7 +79,7 @@ npm run dev
 3. Enter title
 4. Paste text content
 5. Click **Upload Material**
-
+![alt text](image-1.png)
 ---
 
 #### D. YouTube Upload
@@ -97,7 +97,7 @@ npm run dev
 ---
 
 ### ✅ Feature 2: Adaptive Learning & Topic Intelligence
-
+![alt text](image-2.png)
 #### What It Does
 - Tracks performance per topic
 - Identifies weak/medium/strong topics
@@ -130,7 +130,7 @@ npm run dev
 ---
 
 ### ✅ Feature 3: Quiz Generation & Submission
-
+![alt text](image-3.png)
 #### Generate Quiz
 1. Go to **Content** tab
 2. Click **Generate Quiz** on any material
@@ -151,7 +151,7 @@ npm run dev
 ---
 
 ### ✅ Feature 4: Analytics & Dashboard
-
+![alt text](image-4.png)
 #### View Topic Mastery
 1. Go to **Analytics** tab
 2. See **Topic Mastery** section
@@ -186,7 +186,9 @@ npm run dev
 - Priority topics
 
 ---
-
+![alt text](image-5.png)
+![alt text](image-6.png)
+![alt text](image-7.png)
 ## 3️⃣ Complete Workflow
 
 ```
