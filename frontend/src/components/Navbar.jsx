@@ -14,8 +14,8 @@ export const Navbar = ({ showAuth = true }) => {
             <BookOpen className="w-5 h-5 text-white" />
           </div>
           <div>
-            <div className="text-sm font-semibold text-text-primary">Study</div>
-            <div className="text-xs text-text-secondary">Learning Platform</div>
+            <div className="text-sm font-semibold text-text-primary">EduHub</div>
+            <div className="text-xs text-text-secondary">Learn Better</div>
           </div>
         </div>
 

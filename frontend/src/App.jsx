@@ -53,8 +53,8 @@ const Layout = ({ children }) => {
               <BookOpen className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-lg font-bold text-text-primary">Study</h1>
-              <p className="text-xs text-text-secondary">Learning Platform</p>
+              <h1 className="text-lg font-bold text-text-primary">EduHub</h1>
+              <p className="text-xs text-text-secondary">Learn Better</p>
             </div>
           </div>
         </div>
@@ -98,7 +98,7 @@ const Layout = ({ children }) => {
         <nav className="bg-white border-b border-border sticky top-0 z-40">
           <div className="px-8 py-4 flex justify-between items-center gap-6">
             <h2 className="text-2xl font-bold text-text-primary whitespace-nowrap">
-              Welcome to Study Assistant
+              Welcome to EduHub
             </h2>
             <div className="flex-1 max-w-md">
               <SearchBar />

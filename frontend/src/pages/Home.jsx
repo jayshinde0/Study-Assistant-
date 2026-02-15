@@ -18,8 +18,8 @@ export const Home = () => {
               <BookOpen className="w-5 h-5 text-white" />
             </div>
             <div>
-              <div className="text-sm font-semibold text-text-primary">Study</div>
-              <div className="text-xs text-text-secondary">Learning Platform</div>
+              <div className="text-sm font-semibold text-text-primary">EduHub</div>
+              <div className="text-xs text-text-secondary">Learn Better</div>
             </div>
           </div>
           <div className="flex gap-2">
@@ -154,7 +154,7 @@ export const Home = () => {
       {/* Why Choose Us */}
       <section className="bg-white border-b border-border">
         <div className="max-w-7xl mx-auto px-6 py-16">
-          <h2 className="text-2xl font-bold text-text-primary mb-12">Why Study Assistant?</h2>
+          <h2 className="text-2xl font-bold text-text-primary mb-12">Why EduHub?</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {[
@@ -184,13 +184,13 @@ export const Home = () => {
         <div className="max-w-7xl mx-auto px-6 py-16 text-center">
           <h2 className="text-3xl font-bold mb-4">Ready to get started?</h2>
           <p className="text-lg text-gray-300 mb-8 max-w-2xl mx-auto">
-            Join students mastering their subjects with AI-powered learning
+            Join students mastering their subjects with EduHub's AI-powered learning
           </p>
           <div className="flex gap-3 justify-center flex-wrap">
-            <Button onClick={() => navigate('/register')} className="bg-white text-primary hover:bg-gray-100">
+            <Button onClick={() => navigate('/register')} className="bg-black text-white">
               Get Started
             </Button>
-            <Button variant="secondary" onClick={() => navigate('/login')} className="border-white text-white hover:bg-white hover:bg-opacity-10">
+            <Button variant="secondary" onClick={() => navigate('/login')} className="border-white text-black hover:bg-opacity-10">
               Sign In
             </Button>
           </div>
@@ -235,7 +235,7 @@ export const Home = () => {
             </div>
           </div>
           <div className="border-t border-border pt-8 text-center text-sm text-text-secondary">
-            <p>&copy; 2026 Study Assistant. All rights reserved.</p>
+            <p>&copy; 2026 EduHub. All rights reserved.</p>
           </div>
         </div>
       </footer>
