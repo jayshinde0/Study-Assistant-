@@ -21,7 +21,7 @@ npm run dev
 ```
 
 ---
-
+![alt text](image-8.png)
 ## 2️⃣ Features
 
 ### ✅ Feature 1: Upload Study Materials
